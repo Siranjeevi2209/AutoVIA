@@ -11,47 +11,45 @@ export default async function handler(req, res) {
 
   try {
     if (source === "kev") {
-      const kevResp = await fetch(
+      const resp = await fetch(
         "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
       );
-      if (!kevResp.ok) {
-        return res.status(kevResp.status).json({ error: "KEV fetch failed: " + kevResp.status });
-      }
-      const kevData = await kevResp.json();
-      return res.status(200).json(kevData);
+      if (!resp.ok) return res.status(resp.status).json({ error: "KEV failed" });
+      return res.status(200).json(await resp.json());
     }
 
     if (source === "nvd") {
       const apiKey = process.env.NVD_API_KEY || "";
       const perPage = resultsPerPage || "50";
-      let url = "https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=" +
+      const url = "https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=" +
         encodeURIComponent(keyword || "qnx") + "&resultsPerPage=" + perPage;
 
-      if (apiKey) {
-        url += "&apiKey=" + apiKey;
-      }
+      const resp = await fetch(url, {
+        headers: apiKey ? { "apiKey": apiKey } : {}
+      });
 
-      let nvdResp = await fetch(url);
-
-      if (nvdResp.status === 403 || nvdResp.status === 404) {
-        await new Promise(r => setTimeout(r, 6000));
-        nvdResp = await fetch(url);
-      }
-
-      if (!nvdResp.ok) {
-        const errText = await nvdResp.text().catch(() => "");
-        return res.status(nvdResp.status).json({
-          error: "NVD returned " + nvdResp.status,
-          detail: errText.substring(0, 300)
+      if (!resp.ok) {
+        const text = await resp.text().catch(() => "");
+        return res.status(resp.status).json({
+          error: "NVD returned " + resp.status,
+          detail: text.substring(0, 200),
+          keyPresent: !!apiKey
         });
       }
 
-      const nvdData = await nvdResp.json();
-      return res.status(200).json(nvdData);
+      return res.status(200).json(await resp.json());
     }
 
-    return res.status(400).json({ error: "Use ?source=nvd or ?source=kev" });
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
+    if (source === "test") {
+      return res.status(200).json({
+        working: true,
+        keyPresent: !!process.env.NVD_API_KEY,
+        keyLength: (process.env.NVD_API_KEY || "").length
+      });
+    }
+
+    return res.status(400).json({ error: "Use ?source=nvd or ?source=kev or ?source=test" });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
   }
 }
