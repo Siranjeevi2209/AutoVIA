@@ -887,7 +887,7 @@ export default function AutoVIA() {
           }
 
           // Rate limiting: NVD allows 50 req/30s with API key
-          await new Promise(r => setTimeout(r, 700));
+          await new Promise(r => setTimeout(r, 2000));
 
         } catch (e) {
           addLog(`Error querying "${searchItem.keyword}": ${e.message}`, "error");
