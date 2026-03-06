@@ -15,7 +15,7 @@ export default async function handler(req, res) {
         "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
       );
       if (!kevResp.ok) {
-        return res.status(kevResp.status).json({ error: "KEV fetch failed" });
+        return res.status(kevResp.status).json({ error: "KEV fetch failed: " + kevResp.status });
       }
       const kevData = await kevResp.json();
       return res.status(200).json(kevData);
@@ -24,29 +24,41 @@ export default async function handler(req, res) {
     if (source === "nvd") {
       const apiKey = process.env.NVD_API_KEY || "";
       const perPage = resultsPerPage || "50";
-      let url = "https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=" +
+      const url = "https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=" +
         encodeURIComponent(keyword || "qnx") + "&resultsPerPage=" + perPage;
 
+      const headers = {
+        "User-Agent": "AutoVIA/2.5"
+      };
       if (apiKey) {
-        url += "&apiKey=" + apiKey;
+        headers["apiKey"] = apiKey;
       }
 
-      const nvdResp = await fetch(url, {
-        headers: {
-          "User-Agent": "AutoVIA/2.5 (Automotive Vulnerability Intelligence Aggregator)",
-        },
-      });
+      const nvdResp = await fetch(url, { headers });
 
       if (!nvdResp.ok) {
-        return res.status(nvdResp.status).json({ error: "NVD API returned " + nvdResp.status });
+        const errText = await nvdResp.text();
+        return res.status(nvdResp.status).json({ 
+          error: "NVD API returned " + nvdResp.status,
+          detail: errText.substring(0, 500),
+          url_used: url.replace(apiKey, "HIDDEN")
+        });
       }
 
       const nvdData = await nvdResp.json();
       return res.status(200).json(nvdData);
     }
 
-    return res.status(400).json({ error: "Invalid source. Use ?source=nvd or ?source=kev" });
+    if (source === "test") {
+      return res.status(200).json({ 
+        status: "proxy working",
+        hasApiKey: !!process.env.NVD_API_KEY,
+        time: new Date().toISOString()
+      });
+    }
+
+    return res.status(400).json({ error: "Use ?source=nvd or ?source=kev or ?source=test" });
   } catch (error) {
-    return res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message, stack: error.stack?.substring(0, 300) });
   }
 }
