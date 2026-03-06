@@ -6,7 +6,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 // ═══════════════════════════════════════════════════════════════════
 
 // ── NVD API CONFIGURATION ─────────────────────────────────────────
-const NVD_API_KEY = "d9f6f4c5-1399-46ad-98ea-f5ded8aa6721";
+const NVD_API_KEY = import.meta.env.VITE_NVD_API_KEY || "";
 const NVD_API_BASE = "https://services.nvd.nist.gov/rest/json/cves/2.0";
 const KEV_FEED_URL = "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json";
 
