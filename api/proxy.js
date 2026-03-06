@@ -22,7 +22,7 @@ export default async function handler(req, res) {
     }
 
     if (source === "nvd") {
-      const apiKey = process.env.VITE_NVD_API_KEY || "";
+      const apiKey = process.env.NVD_API_KEY || "";
       const perPage = resultsPerPage || "50";
       let url = "https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=" +
         encodeURIComponent(keyword || "qnx") + "&resultsPerPage=" + perPage;
