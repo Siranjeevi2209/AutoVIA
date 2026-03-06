@@ -277,7 +277,7 @@ async function main() {
     vulnerabilities: Array.from(allCVEs.values()),
   };
 
-  const outPath = path.join(__dirname, '..', 'src', 'cve-database.json');
+  const outPath = path.join(__dirname, '..', 'public', 'cve-database.json');
   fs.writeFileSync(outPath, JSON.stringify(output));
   const sizeMB = (Buffer.byteLength(JSON.stringify(output)) / 1024 / 1024).toFixed(2);
 
