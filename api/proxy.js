@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-  // CORS headers for our own frontend
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -11,7 +10,6 @@ export default async function handler(req, res) {
   const { source, keyword, resultsPerPage } = req.query;
 
   try {
-    // ── CISA KEV FEED ──
     if (source === "kev") {
       const kevResp = await fetch(
         "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
@@ -23,16 +21,14 @@ export default async function handler(req, res) {
       return res.status(200).json(kevData);
     }
 
-    // ── NVD API ──
     if (source === "nvd") {
       const apiKey = process.env.VITE_NVD_API_KEY || "";
       const perPage = resultsPerPage || "50";
-      let url = `https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=${encodeURIComponent(
-        keyword || "qnx"
-      )}&resultsPerPage=${perPage}`;
+      let url = "https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=" +
+        encodeURIComponent(keyword || "qnx") + "&resultsPerPage=" + perPage;
 
       if (apiKey) {
-        url += `&apiKey=${apiKey}`;
+        url += "&apiKey=" + apiKey;
       }
 
       const nvdResp = await fetch(url, {
@@ -42,9 +38,7 @@ export default async function handler(req, res) {
       });
 
       if (!nvdResp.ok) {
-        return res
-          .status(nvdResp.status)
-          .json({ error: `NVD API returned ${nvdResp.status}` });
+        return res.status(nvdResp.status).json({ error: "NVD API returned " + nvdResp.status });
       }
 
       const nvdData = await nvdResp.json();
