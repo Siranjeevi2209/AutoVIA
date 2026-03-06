@@ -24,24 +24,25 @@ export default async function handler(req, res) {
     if (source === "nvd") {
       const apiKey = process.env.NVD_API_KEY || "";
       const perPage = resultsPerPage || "50";
-      const url = "https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=" +
+      let url = "https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=" +
         encodeURIComponent(keyword || "qnx") + "&resultsPerPage=" + perPage;
 
-      const headers = {
-        "User-Agent": "AutoVIA/2.5"
-      };
       if (apiKey) {
-        headers["apiKey"] = apiKey;
+        url += "&apiKey=" + apiKey;
       }
 
-      const nvdResp = await fetch(url, { headers });
+      let nvdResp = await fetch(url);
+
+      if (nvdResp.status === 403 || nvdResp.status === 404) {
+        await new Promise(r => setTimeout(r, 6000));
+        nvdResp = await fetch(url);
+      }
 
       if (!nvdResp.ok) {
-        const errText = await nvdResp.text();
-        return res.status(nvdResp.status).json({ 
-          error: "NVD API returned " + nvdResp.status,
-          detail: errText.substring(0, 500),
-          url_used: url.replace(apiKey, "HIDDEN")
+        const errText = await nvdResp.text().catch(() => "");
+        return res.status(nvdResp.status).json({
+          error: "NVD returned " + nvdResp.status,
+          detail: errText.substring(0, 300)
         });
       }
 
@@ -49,16 +50,8 @@ export default async function handler(req, res) {
       return res.status(200).json(nvdData);
     }
 
-    if (source === "test") {
-      return res.status(200).json({ 
-        status: "proxy working",
-        hasApiKey: !!process.env.NVD_API_KEY,
-        time: new Date().toISOString()
-      });
-    }
-
-    return res.status(400).json({ error: "Use ?source=nvd or ?source=kev or ?source=test" });
+    return res.status(400).json({ error: "Use ?source=nvd or ?source=kev" });
   } catch (error) {
-    return res.status(500).json({ error: error.message, stack: error.stack?.substring(0, 300) });
+    return res.status(500).json({ error: error.message });
   }
 }
