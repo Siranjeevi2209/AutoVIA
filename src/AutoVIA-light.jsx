@@ -1,0 +1,354 @@
+import { useState, useEffect, useCallback, useMemo } from "react";
+
+// ═══════════════════════════════════════════════════════════════════
+// AUTO-VIA v3 — Clean Light Dashboard Edition
+// ═══════════════════════════════════════════════════════════════════
+
+const API_PROXY = "/api/proxy";
+
+const ECU = {
+  braking:      { name: "Braking",       full: "Electronic Braking",    asil: "ASIL-D", mod: 1.30, color: "#e11d48", bg: "#fff1f2", ico: "🛑" },
+  steering:     { name: "Steering",      full: "Power Steering",        asil: "ASIL-D", mod: 1.30, color: "#be123c", bg: "#ffe4e6", ico: "🎯" },
+  powertrain:   { name: "Powertrain",    full: "Powertrain / Engine",   asil: "ASIL-C", mod: 1.20, color: "#ea580c", bg: "#fff7ed", ico: "⚡" },
+  chassis:      { name: "Chassis",       full: "Chassis Control",       asil: "ASIL-C", mod: 1.20, color: "#d97706", bg: "#fffbeb", ico: "🔧" },
+  adas:         { name: "ADAS",          full: "ADAS / Autonomous",     asil: "ASIL-D", mod: 1.30, color: "#7c3aed", bg: "#f5f3ff", ico: "🤖" },
+  gateway:      { name: "Gateway",       full: "Gateway ECU",           asil: "ASIL-B", mod: 1.10, color: "#2563eb", bg: "#eff6ff", ico: "🌐" },
+  telematics:   { name: "Telematics",    full: "Telematics Unit",       asil: "ASIL-A", mod: 1.05, color: "#0891b2", bg: "#ecfeff", ico: "📡" },
+  infotainment: { name: "Infotainment",  full: "Infotainment / IVI",    asil: "QM",     mod: 1.00, color: "#059669", bg: "#ecfdf5", ico: "🎵" },
+  body:         { name: "Body",          full: "Body Control",          asil: "QM",     mod: 1.00, color: "#65a30d", bg: "#f7fee7", ico: "🚗" },
+  diagnostics:  { name: "Diagnostics",   full: "Diagnostics",           asil: "QM",     mod: 1.00, color: "#64748b", bg: "#f8fafc", ico: "🔍" },
+};
+
+const REACH = { "remote_external|telematics":1.25,"remote_external|wifi_bt":1.18,"remote_adjacent|wifi_bt":1.15,"remote_adjacent|ethernet":1.12,"local|can":1.05,"local|diagnostic":1.05,"physical|diagnostic":1.00,"physical|can":0.95 };
+const EXPLOIT = { active_exploitation:1.40,weaponized:1.30,functional:1.15,poc:1.10,unknown:0.90 };
+const TIERS = {
+  P0_critical: { tag:"Critical", color:"#e11d48", bg:"#fff1f2", sla:"Immediate (24–72h)", act:"Patch" },
+  P1_high:     { tag:"High",     color:"#ea580c", bg:"#fff7ed", sla:"Within 7 days",      act:"Patch" },
+  P2_medium:   { tag:"Medium",   color:"#d97706", bg:"#fffbeb", sla:"Within 30 days",     act:"Mitigate" },
+  P3_low:      { tag:"Low",      color:"#2563eb", bg:"#eff6ff", sla:"Scheduled",          act:"Monitor" },
+};
+const SURFACES=["remote_external","remote_adjacent","local","physical"];
+const PATHS=["telematics","wifi_bt","ethernet","can","diagnostic","unknown"];
+const EXPLOITS=["active_exploitation","weaponized","functional","poc","unknown"];
+
+const CPE_RULES = [
+  [/qnx/i,"adas"],[/vxworks/i,"powertrain"],[/autosar/i,"powertrain"],[/freertos/i,"gateway"],
+  [/zephyr/i,"body"],[/threadx/i,"telematics"],[/android.*auto/i,"infotainment"],
+  [/openssl/i,"gateway"],[/wolfssl/i,"telematics"],[/mbedtls/i,"telematics"],
+  [/linux.*kernel/i,"gateway"],[/can.*bus|socketcan|j1939/i,"gateway"],[/flexray/i,"chassis"],
+  [/doip|unified.*diagnostic/i,"diagnostics"],[/some.*ip/i,"adas"],[/obd/i,"diagnostics"],
+  [/bluetooth|ble/i,"infotainment"],[/wifi|wi-fi/i,"infotainment"],[/v2x|dsrc/i,"telematics"],
+  [/cellular|5g|lte/i,"telematics"],[/ota|over.*the.*air/i,"telematics"],
+  [/lidar/i,"adas"],[/mobileye|nvidia.*drive/i,"adas"],[/bosch/i,"braking"],
+  [/continental/i,"chassis"],[/denso/i,"powertrain"],[/harman/i,"infotainment"],
+  [/nxp/i,"gateway"],[/infineon/i,"powertrain"],[/renesas/i,"powertrain"],
+  [/brake|braking|abs|esc/i,"braking"],[/steering|eps/i,"steering"],
+  [/airbag|srs/i,"chassis"],[/engine.*control|ecm/i,"powertrain"],
+  [/battery.*management|bms/i,"powertrain"],[/door.*lock|keyless|key.*fob/i,"body"],
+  [/gateway.*ecu/i,"gateway"],[/telematics.*control|tcu/i,"telematics"],
+  [/infotainment|ivi|head.*unit/i,"infotainment"],
+  [/toyota|tesla|bmw|mercedes|volkswagen|ford|hyundai|honda|nissan|kia|volvo/i,"gateway"],
+  [/geotab|fleet/i,"telematics"],[/ev.*charg/i,"powertrain"],[/tpms|tire.*pressure/i,"body"],
+];
+
+const AUTOMOTIVE_NVD_SEARCHES = [
+  {keyword:"qnx",label:"QNX"},{keyword:"vxworks",label:"VxWorks"},{keyword:"autosar",label:"AUTOSAR"},
+  {keyword:"android automotive",label:"Android Auto"},{keyword:"freertos",label:"FreeRTOS"},
+  {keyword:"openssl",label:"OpenSSL"},{keyword:"wolfssl",label:"WolfSSL"},{keyword:"mbedtls",label:"mbedTLS"},
+  {keyword:"can bus",label:"CAN Bus"},{keyword:"bluetooth automotive",label:"BT Auto"},
+  {keyword:"bosch automotive",label:"Bosch"},{keyword:"continental automotive",label:"Continental"},
+  {keyword:"denso",label:"Denso"},{keyword:"harman",label:"Harman"},
+  {keyword:"nvidia drive",label:"NVIDIA"},{keyword:"mobileye",label:"Mobileye"},
+  {keyword:"linux kernel CAN",label:"Linux CAN"},{keyword:"linux kernel bluetooth",label:"Linux BT"},
+  {keyword:"telematics",label:"Telematics"},{keyword:"vehicle gateway",label:"Gateway"},
+  {keyword:"nxp",label:"NXP"},{keyword:"infineon",label:"Infineon"},{keyword:"renesas",label:"Renesas"},
+  {keyword:"toyota vehicle",label:"Toyota"},{keyword:"tesla vehicle",label:"Tesla"},
+  {keyword:"CAN injection",label:"CAN Inject"},{keyword:"keyless entry vehicle",label:"Keyless"},
+  {keyword:"EV charging station",label:"EV Charge"},{keyword:"autonomous driving",label:"ADAS"},
+  {keyword:"connected car",label:"Connected Car"},
+];
+
+// ── ENGINE ────────────────────────────────────────────────────────
+function computeARS(v) {
+  const b=v.cvss_v4_base_score||v.cvss_base_score||0,e=ECU[v.ecu_domain],am=e?e.mod:1,rm=REACH[`${v.attack_surface}|${v.network_path}`]||1,em=EXPLOIT[v.exploit_maturity]||.9;
+  const raw=b*am*rm*em,score=Math.min(10,+raw.toFixed(2));
+  let tier=v.kev_listed?"P0_critical":score>=9?"P0_critical":score>=7?"P1_high":score>=4?"P2_medium":"P3_low";
+  return{ars:score,priority_tier:tier,recommended_action:TIERS[tier].act,raw_score:raw,asil_mod:am,reach_mod:rm,exploit_mod:em,
+    justification_trace:[`CVSS Base: ${b}`,`ECU: ${e?.full||v.ecu_domain} — ×${am}`,`Reach: ${v.attack_surface}/${v.network_path} — ×${rm}`,
+      `Exploit: ${v.exploit_maturity} — ×${em}`,`Raw: ${raw.toFixed(3)}`,`ARS: ${score}`,v.kev_listed?"⚡ KEV → P0":`Tier: ${tier}`]};
+}
+function classify(text){for(const[p,d]of CPE_RULES)if(p.test(text))return d;return"gateway";}
+function inferSurface(vec,desc){let s="local",p="unknown";const d=(desc||"").toLowerCase();if(vec?.includes("AV:N"))s="remote_external";else if(vec?.includes("AV:A"))s="remote_adjacent";else if(vec?.includes("AV:P"))s="physical";if(d.match(/cellular|ota|telematics|5g|lte|v2x|cloud/))p="telematics";else if(d.match(/bluetooth|ble|wifi|wireless|nfc|uwb/))p="wifi_bt";else if(d.match(/ethernet|tcp|some.ip/))p="ethernet";else if(d.match(/can|j1939|obd|lin|flexray/))p="can";else if(d.match(/diagnostic|uds|doip|jtag|usb/))p="diagnostic";else if(s==="remote_external")p="telematics";else if(s==="remote_adjacent")p="wifi_bt";else if(s==="physical")p="diagnostic";else p="can";return{s,p};}
+function parseNVD(item,kevSet){const c=item.cve;if(!c?.id)return null;const desc=c.descriptions?.find(d=>d.lang==="en")?.value||"";const m=c.metrics||{};let bs=0,vec="";if(m.cvssMetricV40?.length){bs=m.cvssMetricV40[0].cvssData?.baseScore||0;vec=m.cvssMetricV40[0].cvssData?.vectorString||"";}else if(m.cvssMetricV31?.length){bs=m.cvssMetricV31[0].cvssData?.baseScore||0;vec=m.cvssMetricV31[0].cvssData?.vectorString||"";}else if(m.cvssMetricV30?.length){bs=m.cvssMetricV30[0].cvssData?.baseScore||0;vec=m.cvssMetricV30[0].cvssData?.vectorString||"";}else if(m.cvssMetricV2?.length){bs=m.cvssMetricV2[0].cvssData?.baseScore||0;vec=m.cvssMetricV2[0].cvssData?.vectorString||"";}if(!bs)return null;const cpes=[];(c.configurations||[]).forEach(x=>(x.nodes||[]).forEach(n=>(n.cpeMatch||[]).forEach(m=>m.criteria&&cpes.push(m.criteria))));const cwes=[];(c.weaknesses||[]).forEach(w=>(w.description||[]).forEach(d=>d.value&&!d.value.includes("noinfo")&&!d.value.includes("Other")&&cwes.push(d.value)));const dom=classify(desc+" "+cpes.join(" "));const{s,p}=inferSurface(vec,desc);const kev=kevSet.has(c.id);let prod="";if(cpes.length){const x=cpes[0].split(":");if(x.length>=5)prod=`${x[3]}:${x[4]}${x[5]&&x[5]!=="*"?":"+x[5]:""}`;}if(!prod){const mm=desc.match(/(?:in|of|for)\s+([A-Z][\w\s.-]+?)(?:\s+(?:before|prior|through|allows|could|may|is|via))/i);prod=mm?mm[1].trim():"";}const v={cve_id:c.id,published:c.published?.split("T")[0]||"",modified:c.lastModified?.split("T")[0]||"",description:desc,cvss_v4_base_score:bs,cvss_vector:vec,cwe_ids:cwes,cpe_matches:cpes.slice(0,5),affected_product:prod,ecu_domain:dom,attack_surface:s,network_path:p,exploit_maturity:kev?"active_exploitation":"unknown",kev_listed:kev,source_feeds:kev?["NVD","CISA_KEV"]:["NVD"],classification_method:"cpe_taxonomy_rule"};return{...v,...computeARS(v)};}
+
+// ═══════════════════════════════════════════════════════════════════
+// CSS
+// ═══════════════════════════════════════════════════════════════════
+const CSS = `
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap');
+:root{--bg:#f8fafc;--surface:#ffffff;--surface-2:#f1f5f9;--border:#e2e8f0;--border-h:#cbd5e1;--text-0:#0f172a;--text-1:#334155;--text-2:#64748b;--text-3:#94a3b8;
+--blue:#2563eb;--blue-bg:#eff6ff;--cyan:#0891b2;--red:#e11d48;--amber:#d97706;--green:#059669;--purple:#7c3aed;
+--font:'Plus Jakarta Sans',sans-serif;--mono:'Fira Code',monospace;--shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);--shadow-md:0 4px 6px -1px rgba(0,0,0,.07),0 2px 4px -2px rgba(0,0,0,.05);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.08),0 4px 6px -4px rgba(0,0,0,.04);--radius:14px;}
+*{box-sizing:border-box;margin:0;padding:0;}body{background:var(--bg);}
+::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--surface-2);}::-webkit-scrollbar-thumb{background:var(--border-h);border-radius:6px;}
+::selection{background:#2563eb20;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+option{background:#fff;color:#0f172a;}
+`;
+
+// ── ATOMS ─────────────────────────────────────────────────────────
+const Tag = ({children,color,bg,style:s,...p}) => (
+  <span {...p} style={{display:"inline-flex",alignItems:"center",gap:4,padding:"4px 10px",borderRadius:20,fontSize:11,fontWeight:600,fontFamily:"var(--font)",color:color||"var(--text-1)",background:bg||"var(--surface-2)",whiteSpace:"nowrap",...(s||{})}}>{children}</span>
+);
+
+const TierTag = ({tier}) => {const t=TIERS[tier];return t?<Tag color={t.color} bg={t.bg}><span style={{width:6,height:6,borderRadius:"50%",background:t.color,display:"inline-block"}}/>{t.tag}</Tag>:null;};
+const KevTag = () => <Tag color="#fff" bg="#e11d48" style={{fontSize:10,padding:"3px 8px",fontWeight:700}}>⚡ KEV</Tag>;
+const EcuTag = ({d}) => {const e=ECU[d];return e?<Tag color={e.color} bg={e.bg}>{e.ico} {e.name}</Tag>:<span>{d}</span>;};
+const AsilTag = ({a}) => {const c=a?.includes("D")?"#e11d48":a?.includes("C")?"#ea580c":a?.includes("B")?"#d97706":a?.includes("A")?"#2563eb":"#64748b";return<Tag color={c} bg={`${c}10`}>{a}</Tag>;};
+
+function ScoreCircle({score,size=56}){
+  const r=size*.36,circ=2*Math.PI*r,off=circ-(score/10)*circ;
+  const c=score>=9?"#e11d48":score>=7?"#ea580c":score>=4?"#d97706":"#2563eb";
+  return(<svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{flexShrink:0}}>
+    <circle cx={size/2} cy={size/2} r={r} fill="none" stroke="#e2e8f0" strokeWidth={size*.065}/>
+    <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={c} strokeWidth={size*.065} strokeDasharray={circ} strokeDashoffset={off} strokeLinecap="round" transform={`rotate(-90 ${size/2} ${size/2})`} style={{transition:"stroke-dashoffset .8s cubic-bezier(.4,0,.2,1)"}}/>
+    <text x={size/2} y={size/2-size*.03} textAnchor="middle" fill="#0f172a" fontSize={size*.26} fontWeight="700" fontFamily="var(--mono)">{score.toFixed(1)}</text>
+    <text x={size/2} y={size/2+size*.15} textAnchor="middle" fill="#94a3b8" fontSize={size*.12} fontWeight="600" fontFamily="var(--font)">ARS</text>
+  </svg>);
+}
+
+const Card = ({children,pad,style:s,...p}) => (<div {...p} style={{background:"var(--surface)",border:"1px solid var(--border)",borderRadius:"var(--radius)",padding:pad||20,boxShadow:"var(--shadow)",...(s||{})}}>{children}</div>);
+const CardTitle = ({children,icon}) => (<div style={{display:"flex",alignItems:"center",gap:8,marginBottom:16}}>{icon&&<span style={{fontSize:18}}>{icon}</span>}<h3 style={{fontFamily:"var(--font)",fontSize:14,fontWeight:700,color:"var(--text-0)",letterSpacing:"-.01em"}}>{children}</h3></div>);
+
+// ── DETAIL PANEL ──────────────────────────────────────────────────
+function DetailPanel({v,onClose}){
+  if(!v)return null;const e=ECU[v.ecu_domain],t=TIERS[v.priority_tier];
+  const[tab,setTab]=useState("info");
+  const avr={record_id:`avia-${v.cve_id.replace("CVE-","").replace("-","-")}`,cve_id:v.cve_id,source_feeds:v.source_feeds,published_date:v.published,last_modified_date:v.modified,cvss_v4_base_score:v.cvss_v4_base_score,cvss_vector:v.cvss_vector,exploit_maturity:v.exploit_maturity,kev_listed:v.kev_listed,affected_product:v.affected_product,ecu_domain:v.ecu_domain,safety_criticality:e?.asil||"QM",attack_surface:v.attack_surface,network_path:v.network_path,contextual_risk_score:v.ars,priority_tier:v.priority_tier,recommended_action:v.recommended_action,justification_trace:v.justification_trace};
+  const tara={asset_id:`TARA-ASSET-${(v.affected_product||v.cve_id).replace(/[\s:]/g,"_")}-${v.ecu_domain}`,asset_name:v.affected_product,asset_type:"software_component",ecu_domain:v.ecu_domain,safety_criticality:e?.asil||"QM",affected_cve:v.cve_id,ars_score:v.ars,priority_tier:v.priority_tier,recommended_action:v.recommended_action,treatment_sla:t?.sla,damage_scenario:`Exploitation of ${v.affected_product} in ${e?.full} domain via ${v.attack_surface} (${v.network_path})`,iso_21434_clause:"Cl.15",generated_at:new Date().toISOString()};
+  const dl=(data,name)=>{const b=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download=name;a.click();URL.revokeObjectURL(u);};
+  const Row=({label,children})=>(<div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"10px 0",borderBottom:"1px solid var(--border)"}}><span style={{fontSize:12,color:"var(--text-2)",fontWeight:600}}>{label}</span><span>{children}</span></div>);
+  const dlBtn={width:"100%",marginTop:14,padding:"12px",borderRadius:10,background:"var(--blue-bg)",border:"1px solid #bfdbfe",color:"var(--blue)",fontFamily:"var(--mono)",fontSize:12,fontWeight:600,cursor:"pointer",textAlign:"center"};
+
+  return(
+    <div style={{position:"fixed",top:0,right:0,bottom:0,width:"min(620px,94vw)",background:"var(--surface)",borderLeft:"1px solid var(--border)",zIndex:1000,display:"flex",flexDirection:"column",animation:"slideIn .3s ease",boxShadow:"-10px 0 40px rgba(0,0,0,.1)"}}>
+      <div style={{padding:"20px 24px",borderBottom:"1px solid var(--border)",display:"flex",alignItems:"center",gap:14}}>
+        <ScoreCircle score={v.ars} size={56}/>
+        <div style={{flex:1}}><div style={{fontFamily:"var(--mono)",fontSize:17,fontWeight:700,color:"var(--text-0)"}}>{v.cve_id}</div>
+          <div style={{display:"flex",gap:6,marginTop:6,flexWrap:"wrap"}}><TierTag tier={v.priority_tier}/>{v.kev_listed&&<KevTag/>}<EcuTag d={v.ecu_domain}/></div></div>
+        <button onClick={onClose} style={{background:"var(--surface-2)",border:"1px solid var(--border)",borderRadius:10,color:"var(--text-2)",padding:"8px 12px",cursor:"pointer",fontSize:16,lineHeight:1}}>✕</button>
+      </div>
+      <div style={{display:"flex",borderBottom:"1px solid var(--border)",padding:"0 24px"}}>
+        {[["info","Overview"],["ars","ARS Score"],["avr","AVR JSON"],["tara","TARA"]].map(([id,label])=>(
+          <button key={id} onClick={()=>setTab(id)} style={{background:"none",border:"none",padding:"12px 16px",cursor:"pointer",fontFamily:"var(--font)",fontSize:12,fontWeight:600,color:tab===id?"var(--blue)":"var(--text-3)",borderBottom:tab===id?"2px solid var(--blue)":"2px solid transparent",transition:"all .2s"}}>{label}</button>
+        ))}
+      </div>
+      <div style={{flex:1,overflow:"auto",padding:24}}>
+        {tab==="info"&&<div style={{display:"flex",flexDirection:"column",gap:20}}>
+          <div><CardTitle icon="📄">Description</CardTitle><p style={{color:"var(--text-1)",fontSize:13,lineHeight:1.8}}>{v.description}</p></div>
+          <div><CardTitle icon="🏷️">Classification</CardTitle><Row label="ECU Domain"><EcuTag d={v.ecu_domain}/></Row><Row label="ASIL"><AsilTag a={e?.asil}/></Row><Row label="Attack Surface"><Tag>{v.attack_surface}</Tag></Row><Row label="Network Path"><Tag>{v.network_path}</Tag></Row><Row label="CVSS"><span style={{fontFamily:"var(--mono)",fontWeight:700,fontSize:14}}>{v.cvss_v4_base_score}</span></Row><Row label="Exploit"><Tag color={v.exploit_maturity==="active_exploitation"?"#e11d48":"var(--text-2)"} bg={v.exploit_maturity==="active_exploitation"?"#fff1f2":"var(--surface-2)"}>{v.exploit_maturity}</Tag></Row><Row label="KEV"><span style={{fontWeight:700,color:v.kev_listed?"#e11d48":"var(--text-3)"}}>{v.kev_listed?"YES":"NO"}</span></Row></div>
+          <div><CardTitle icon="⏰">Treatment SLA</CardTitle><div style={{padding:14,borderRadius:12,background:t?.bg,border:`1px solid ${t?.color}20`}}><div style={{fontFamily:"var(--font)",fontSize:14,fontWeight:700,color:t?.color}}>{t?.sla}</div><div style={{fontSize:12,color:"var(--text-2)",marginTop:4}}>Action: <strong style={{color:"var(--text-0)"}}>{v.recommended_action}</strong></div></div></div>
+        </div>}
+        {tab==="ars"&&<div style={{display:"flex",flexDirection:"column",gap:20}}>
+          <div><CardTitle icon="🧮">ARS Formula</CardTitle><div style={{padding:14,borderRadius:10,background:"var(--blue-bg)",fontFamily:"var(--mono)",fontSize:12,color:"var(--blue)"}}>ARS = MIN(10.0, Base × ASIL × Reach × Exploit)</div></div>
+          <div><CardTitle icon="📊">Breakdown</CardTitle>
+            {[["CVSS Base",v.cvss_v4_base_score,"—",v.cvss_v4_base_score],[`ASIL (${e?.asil})`,v.ecu_domain,`×${v.asil_mod}`,(v.cvss_v4_base_score*v.asil_mod).toFixed(2)],["Reachability",`${v.attack_surface}/${v.network_path}`,`×${v.reach_mod}`,(v.cvss_v4_base_score*v.asil_mod*v.reach_mod).toFixed(2)],["Exploit",v.exploit_maturity,`×${v.exploit_mod}`,v.raw_score?.toFixed(2)]].map(([f,val,mod,run],i)=>(
+              <div key={i} style={{display:"grid",gridTemplateColumns:"1.2fr 1fr .6fr .8fr",gap:8,padding:"10px 0",borderBottom:"1px solid var(--border)",fontSize:12}}>
+                <span style={{color:"var(--text-1)",fontWeight:600}}>{f}</span><span style={{fontFamily:"var(--mono)",color:"var(--text-2)"}}>{val}</span><span style={{fontFamily:"var(--mono)",color:"var(--blue)"}}>{mod}</span><span style={{fontFamily:"var(--mono)",fontWeight:700,color:"var(--text-0)",textAlign:"right"}}>{run}</span></div>))}
+            <div style={{display:"flex",justifyContent:"space-between",padding:"14px 0",borderTop:"2px solid var(--border-h)"}}><span style={{fontWeight:700,fontSize:14}}>Final ARS</span><span style={{fontFamily:"var(--mono)",fontSize:24,fontWeight:800,color:t?.color}}>{v.ars?.toFixed(1)}</span></div></div>
+          <div><CardTitle icon="📋">Audit Trail</CardTitle>{v.justification_trace?.map((l,i)=>(<div key={i} style={{display:"flex",gap:8,padding:"6px 10px",borderRadius:8,background:i%2?"transparent":"var(--surface-2)",fontSize:11,fontFamily:"var(--mono)"}}><span style={{color:"var(--text-3)",minWidth:18}}>{String(i+1).padStart(2,"0")}</span><span style={{color:"var(--text-1)"}}>{l}</span></div>))}</div>
+        </div>}
+        {tab==="avr"&&<div><CardTitle icon="📦">AVR Record</CardTitle><pre style={{background:"var(--surface-2)",border:"1px solid var(--border)",borderRadius:12,padding:16,fontSize:11,fontFamily:"var(--mono)",color:"var(--text-1)",overflow:"auto",whiteSpace:"pre-wrap",lineHeight:1.7,maxHeight:500}}>{JSON.stringify(avr,null,2)}</pre><button onClick={()=>dl(avr,`${v.cve_id}_AVR.json`)} style={dlBtn}>⬇ Download AVR</button></div>}
+        {tab==="tara"&&<div><CardTitle icon="📑">TARA Asset Register</CardTitle><pre style={{background:"var(--surface-2)",border:"1px solid var(--border)",borderRadius:12,padding:16,fontSize:11,fontFamily:"var(--mono)",color:"var(--text-1)",overflow:"auto",whiteSpace:"pre-wrap",lineHeight:1.7,maxHeight:500}}>{JSON.stringify(tara,null,2)}</pre><button onClick={()=>dl(tara,`TARA_${v.cve_id}.json`)} style={dlBtn}>⬇ Download TARA</button></div>}
+      </div>
+    </div>
+  );
+}
+
+// ── STATS ─────────────────────────────────────────────────────────
+function Stats({vulns,loading}){
+  const items=[{l:"Total AVRs",v:loading?"…":vulns.length,c:"var(--blue)",bg:"var(--blue-bg)",ico:"📊"},{l:"Critical",v:loading?"…":vulns.filter(x=>x.priority_tier==="P0_critical").length,c:"#e11d48",bg:"#fff1f2",ico:"🔴"},{l:"High",v:loading?"…":vulns.filter(x=>x.priority_tier==="P1_high").length,c:"#ea580c",bg:"#fff7ed",ico:"🟠"},{l:"Medium",v:loading?"…":vulns.filter(x=>x.priority_tier==="P2_medium").length,c:"#d97706",bg:"#fffbeb",ico:"🟡"},{l:"Low",v:loading?"…":vulns.filter(x=>x.priority_tier==="P3_low").length,c:"#2563eb",bg:"#eff6ff",ico:"🔵"},{l:"KEV",v:loading?"…":vulns.filter(x=>x.kev_listed).length,c:"#e11d48",bg:"#fff1f2",ico:"⚡"},{l:"Avg ARS",v:loading?"…":vulns.length?(vulns.reduce((s,x)=>s+x.ars,0)/vulns.length).toFixed(1):"0",c:"#7c3aed",bg:"#f5f3ff",ico:"📈"}];
+  return(<div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:12}}>
+    {items.map((s,i)=>(<Card key={i} pad="16px" style={{textAlign:"center",animation:`fadeUp .5s ease ${i*.05}s both`}}>
+      <div style={{fontSize:22,marginBottom:4}}>{s.ico}</div>
+      <div style={{fontFamily:"var(--mono)",fontSize:26,fontWeight:800,color:s.c,lineHeight:1.1}}>{s.v}</div>
+      <div style={{fontSize:11,fontWeight:600,color:"var(--text-3)",marginTop:6}}>{s.l}</div>
+    </Card>))}
+  </div>);
+}
+
+// ── CHARTS ────────────────────────────────────────────────────────
+function EcuChart({vulns}){const counts={};vulns.forEach(v=>{counts[v.ecu_domain]=(counts[v.ecu_domain]||0)+1;});const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);const max=Math.max(...sorted.map(([,c])=>c),1);
+  return(<Card><CardTitle icon="🏎️">ECU Domains</CardTitle>{sorted.map(([d,c],i)=>{const e=ECU[d];return(<div key={d} style={{display:"flex",alignItems:"center",gap:10,marginBottom:8,animation:`fadeUp .4s ease ${i*.04}s both`}}>
+    <span style={{minWidth:110,fontSize:12,fontWeight:600,color:e?.color||"var(--text-2)"}}>{e?.ico} {e?.name||d}</span>
+    <div style={{flex:1,height:24,background:"var(--surface-2)",borderRadius:8,overflow:"hidden"}}>
+      <div style={{height:"100%",width:`${(c/max)*100}%`,background:`linear-gradient(90deg,${e?.color}30,${e?.color}10)`,borderRadius:8,transition:"width 1s cubic-bezier(.4,0,.2,1)",display:"flex",alignItems:"center",justifyContent:"flex-end",paddingRight:8}}>
+        <span style={{fontFamily:"var(--mono)",fontSize:11,fontWeight:700,color:e?.color}}>{c}</span></div></div></div>);})}</Card>);
+}
+
+function PriorityChart({vulns}){const total=vulns.length||1;
+  return(<Card><CardTitle icon="📋">Priority Distribution</CardTitle>{Object.entries(TIERS).map(([k,t],i)=>{const c=vulns.filter(v=>v.priority_tier===k).length,pct=((c/total)*100).toFixed(0);return(
+    <div key={k} style={{display:"flex",alignItems:"center",gap:10,marginBottom:10,animation:`fadeUp .4s ease ${i*.06}s both`}}>
+      <span style={{minWidth:72}}><TierTag tier={k}/></span>
+      <div style={{flex:1,height:28,background:"var(--surface-2)",borderRadius:8,overflow:"hidden",position:"relative"}}>
+        <div style={{height:"100%",width:`${pct}%`,background:t.bg,borderRadius:8,transition:"width 1s ease",borderRight:c>0?`3px solid ${t.color}`:"none"}}/>
+        {c>0&&<span style={{position:"absolute",left:pct>15?8:"auto",right:pct>15?"auto":8,top:"50%",transform:"translateY(-50%)",fontFamily:"var(--mono)",fontSize:12,fontWeight:700,color:t.color}}>{c}</span>}
+      </div>
+      <span style={{minWidth:36,fontFamily:"var(--mono)",fontSize:12,color:"var(--text-3)",textAlign:"right"}}>{pct}%</span>
+    </div>);})}</Card>);
+}
+
+// ── MANUAL ─────────────────────────────────────────────────────────
+function ManualInput({onCompute}){
+  const[f,set]=useState({cve_id:"",description:"",cvss_v4_base_score:7.5,ecu_domain:"gateway",attack_surface:"remote_external",network_path:"telematics",exploit_maturity:"poc",kev_listed:false,affected_product:""});
+  const u=(k,v)=>set(p=>({...p,[k]:v}));const go=()=>{if(!f.cve_id)return;const v={...f,cvss_v4_base_score:+f.cvss_v4_base_score,published:new Date().toISOString().split("T")[0],modified:new Date().toISOString().split("T")[0],cvss_vector:"Manual",cwe_ids:[],cpe_matches:[],source_feeds:["Manual"],classification_method:"manual"};onCompute({...v,...computeARS(v)});};
+  const inp={background:"var(--surface-2)",border:"1px solid var(--border)",borderRadius:10,padding:"10px 14px",color:"var(--text-0)",fontFamily:"var(--mono)",fontSize:12,outline:"none",width:"100%",boxSizing:"border-box"};
+  const lbl={fontSize:11,color:"var(--text-2)",fontWeight:600,marginBottom:4,display:"block"};
+  return(<Card style={{maxWidth:900,margin:"0 auto"}}><CardTitle icon="➕">Manual CVE Assessment</CardTitle>
+    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:14}}>
+      <div><label style={lbl}>CVE ID</label><input style={inp} value={f.cve_id} onChange={e=>u("cve_id",e.target.value)} placeholder="CVE-2026-XXXXX"/></div>
+      <div><label style={lbl}>Product</label><input style={inp} value={f.affected_product} onChange={e=>u("affected_product",e.target.value)} placeholder="Product"/></div>
+      <div><label style={lbl}>CVSS Base</label><input type="number" step=".1" min="0" max="10" style={inp} value={f.cvss_v4_base_score} onChange={e=>u("cvss_v4_base_score",e.target.value)}/></div>
+      <div><label style={lbl}>ECU Domain</label><select style={{...inp,cursor:"pointer"}} value={f.ecu_domain} onChange={e=>u("ecu_domain",e.target.value)}>{Object.entries(ECU).map(([k,v])=><option key={k} value={k}>{v.ico} {v.full}</option>)}</select></div>
+      <div><label style={lbl}>Attack Surface</label><select style={{...inp,cursor:"pointer"}} value={f.attack_surface} onChange={e=>u("attack_surface",e.target.value)}>{SURFACES.map(s=><option key={s} value={s}>{s}</option>)}</select></div>
+      <div><label style={lbl}>Network Path</label><select style={{...inp,cursor:"pointer"}} value={f.network_path} onChange={e=>u("network_path",e.target.value)}>{PATHS.map(s=><option key={s} value={s}>{s}</option>)}</select></div>
+      <div><label style={lbl}>Exploit Maturity</label><select style={{...inp,cursor:"pointer"}} value={f.exploit_maturity} onChange={e=>u("exploit_maturity",e.target.value)}>{EXPLOITS.map(s=><option key={s} value={s}>{s}</option>)}</select></div>
+      <div><label style={lbl}>KEV Listed</label><select style={{...inp,cursor:"pointer"}} value={f.kev_listed} onChange={e=>u("kev_listed",e.target.value==="true")}><option value="false">No</option><option value="true">Yes</option></select></div>
+    </div>
+    <div style={{marginTop:14}}><label style={lbl}>Description</label><textarea style={{...inp,height:64,resize:"vertical"}} value={f.description} onChange={e=>u("description",e.target.value)} placeholder="Vulnerability description..."/></div>
+    <button onClick={go} style={{marginTop:16,width:"100%",padding:"12px",borderRadius:10,background:"var(--blue)",border:"none",color:"#fff",fontFamily:"var(--font)",fontSize:14,fontWeight:700,cursor:"pointer"}}>Compute ARS & Generate AVR</button>
+  </Card>);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// MAIN APP
+// ═══════════════════════════════════════════════════════════════════
+export default function AutoVIA(){
+  const[vulns,setVulns]=useState([]);const[loading,setLoading]=useState(true);const[logs,setLogs]=useState([]);
+  const[search,setSearch]=useState("");const[fDomain,setFDomain]=useState("all");const[fPriority,setFPriority]=useState("all");
+  const[fKEV,setFKEV]=useState(false);const[selected,setSelected]=useState(null);const[view,setView]=useState("dashboard");
+  const[sortBy,setSortBy]=useState("ars_desc");const[progress,setProgress]=useState({current:0,total:0,source:""});
+  const[kevSet,setKevSet]=useState(new Set());const[liveSearching,setLiveSearching]=useState(false);const[dbInfo,setDbInfo]=useState(null);
+
+  const log=useCallback((msg,type="info")=>{setLogs(p=>[...p.slice(-60),{t:new Date().toLocaleTimeString("en-US",{hour12:false,hour:"2-digit",minute:"2-digit",second:"2-digit"}),msg,type}]);},[]);
+
+  useEffect(()=>{let stop=false;async function load(){log("Starting…");
+    try{const r=await fetch("/cve-database.json");if(r.ok){const db=await r.json();if(db.vulnerabilities?.length){
+      try{const kr=await fetch(`${API_PROXY}?source=kev`);if(kr.ok){const kd=await kr.json();const ks=new Set();kd.vulnerabilities?.forEach(v=>ks.add(v.cveID));setKevSet(ks);}}catch{}
+      const enriched=db.vulnerabilities.map(v=>({...v,cvss_v4_base_score:v.cvss_base_score||v.cvss_v4_base_score||0,...computeARS({...v,cvss_v4_base_score:v.cvss_base_score||v.cvss_v4_base_score||0})}));
+      if(!stop){setVulns(enriched);setLoading(false);setDbInfo({count:enriched.length,date:db.generated_at});log(`Loaded ${enriched.length} AVRs`,"success");}return;}}}catch{}
+    // Fallback
+    let ks=new Set();try{const kr=await fetch(`${API_PROXY}?source=kev`);if(kr.ok){const kd=await kr.json();kd.vulnerabilities?.forEach(v=>ks.add(v.cveID));setKevSet(ks);log(`KEV: ${ks.size}`,"success");}}catch{}
+    const map=new Map();let idx=0;
+    for(const si of AUTOMOTIVE_NVD_SEARCHES){if(stop)break;idx++;setProgress({current:idx,total:AUTOMOTIVE_NVD_SEARCHES.length,source:si.label});
+      try{const r=await fetch(`${API_PROXY}?source=nvd&keyword=${encodeURIComponent(si.keyword)}&resultsPerPage=50`);if(r.status===429){await new Promise(r=>setTimeout(r,15000));continue;}if(!r.ok)continue;const d=await r.json();let a=0;for(const it of d.vulnerabilities||[]){const id=it.cve?.id;if(!id||map.has(id))continue;const av=parseNVD(it,ks);if(av&&av.cvss_v4_base_score>0){map.set(id,av);a++;}}
+        log(`[${idx}/${AUTOMOTIVE_NVD_SEARCHES.length}] ${si.label}: +${a}`,"success");if(!stop)setVulns([...map.values()].sort((a,b)=>b.ars-a.ars));await new Promise(r=>setTimeout(r,7000));}catch{}}
+    if(!stop){setVulns([...map.values()].sort((a,b)=>b.ars-a.ars));setLoading(false);}
+  }load();return()=>{stop=true;};},[log]);
+
+  const liveSearch=async(q)=>{if(!q||q.length<3||liveSearching)return;setLiveSearching(true);
+    try{const r=await fetch(`${API_PROXY}?source=nvd&keyword=${encodeURIComponent(q)}&resultsPerPage=50`);if(!r.ok){setLiveSearching(false);return;}const d=await r.json();let a=0;
+      setVulns(p=>{const m=new Map(p.map(v=>[v.cve_id,v]));for(const it of d.vulnerabilities||[]){const id=it.cve?.id;if(!id||m.has(id))continue;const av=parseNVD(it,kevSet);if(av&&av.cvss_v4_base_score>0){m.set(id,av);a++;}}return[...m.values()].sort((a,b)=>b.ars-a.ars);});
+      log(`Live: "${q}" → +${a} new`,"success");}catch{}setLiveSearching(false);};
+
+  const handleManual=(v)=>{setVulns(p=>[v,...p]);setSelected(v);setView("search");};
+  const filtered=useMemo(()=>{let r=vulns;if(search){const q=search.toLowerCase();r=r.filter(v=>v.cve_id?.toLowerCase().includes(q)||v.description?.toLowerCase().includes(q)||v.affected_product?.toLowerCase().includes(q)||v.ecu_domain?.toLowerCase().includes(q)||v.cwe_ids?.some(c=>c.toLowerCase().includes(q)));}
+    if(fDomain!=="all")r=r.filter(v=>v.ecu_domain===fDomain);if(fPriority!=="all")r=r.filter(v=>v.priority_tier===fPriority);if(fKEV)r=r.filter(v=>v.kev_listed);
+    r.sort((a,b)=>{switch(sortBy){case"ars_asc":return a.ars-b.ars;case"cvss_desc":return b.cvss_v4_base_score-a.cvss_v4_base_score;case"date_desc":return new Date(b.published)-new Date(a.published);default:return b.ars-a.ars;}});return r;},[vulns,search,fDomain,fPriority,fKEV,sortBy]);
+
+  const sel={background:"var(--surface-2)",border:"1px solid var(--border)",borderRadius:10,padding:"8px 12px",color:"var(--text-1)",fontFamily:"var(--font)",fontSize:12,fontWeight:500,outline:"none",cursor:"pointer"};
+  const expBtn={padding:"10px 16px",borderRadius:10,background:"var(--surface)",border:"1px solid var(--border)",color:"var(--blue)",fontFamily:"var(--mono)",fontSize:12,fontWeight:600,cursor:"pointer"};
+
+  return(
+    <div style={{minHeight:"100vh",background:"var(--bg)",color:"var(--text-0)",fontFamily:"var(--font)"}}>
+      <style>{CSS}</style>
+
+      {/* HEADER */}
+      <header style={{padding:"0 32px",height:64,display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid var(--border)",background:"var(--surface)",position:"sticky",top:0,zIndex:100}}>
+        <div style={{display:"flex",alignItems:"center",gap:12}}>
+          <div style={{width:36,height:36,borderRadius:10,display:"flex",alignItems:"center",justifyContent:"center",background:"var(--blue)",fontFamily:"var(--mono)",fontWeight:800,fontSize:13,color:"#fff"}}>AV</div>
+          <div><div style={{fontFamily:"var(--font)",fontWeight:800,fontSize:16,color:"var(--text-0)",letterSpacing:"-.02em"}}>Auto-VIA</div>
+            <div style={{fontSize:10,color:"var(--text-3)",fontWeight:500,letterSpacing:".06em"}}>AUTOMOTIVE VULNERABILITY INTELLIGENCE</div></div>
+        </div>
+        <nav style={{display:"flex",gap:2}}>
+          {[["dashboard","Dashboard","◫"],["search","Search & Triage","⌕"],["assess","Manual Assessment","＋"]].map(([id,label,ico])=>(
+            <button key={id} onClick={()=>setView(id)} style={{background:view===id?"var(--blue-bg)":"transparent",border:view===id?"1px solid #bfdbfe":"1px solid transparent",borderRadius:10,padding:"8px 16px",cursor:"pointer",fontFamily:"var(--font)",fontSize:12,fontWeight:600,color:view===id?"var(--blue)":"var(--text-2)",transition:"all .2s"}}>{ico} {label}</button>
+          ))}
+        </nav>
+        <div style={{display:"flex",alignItems:"center",gap:8}}>
+          {loading?<Tag color="var(--amber)" bg="#fffbeb" style={{animation:"pulse 1.5s infinite"}}>◌ Loading {progress.source}…</Tag>
+            :<Tag color="var(--green)" bg="#ecfdf5">● {vulns.length} AVRs{dbInfo?` · Updated ${new Date(dbInfo.date).toLocaleDateString()}`:""}</Tag>}
+        </div>
+      </header>
+
+      <main style={{maxWidth:1440,margin:"0 auto",padding:"24px 32px"}}>
+        {view==="dashboard"&&<div style={{display:"flex",flexDirection:"column",gap:20}}>
+          <Stats vulns={vulns} loading={loading}/>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:20}}><EcuChart vulns={vulns}/><PriorityChart vulns={vulns}/></div>
+          <Card><CardTitle icon="🚨">Critical & High Findings</CardTitle>
+            {vulns.filter(v=>v.priority_tier==="P0_critical"||v.priority_tier==="P1_high").slice(0,8).map((v,i)=>(
+              <div key={v.cve_id} onClick={()=>setSelected(v)} style={{display:"flex",alignItems:"center",gap:14,padding:"12px 14px",borderRadius:12,border:"1px solid var(--border)",cursor:"pointer",transition:"all .2s",marginBottom:8,animation:`fadeUp .4s ease ${i*.04}s both`}}
+                onMouseEnter={e=>{e.currentTarget.style.borderColor="var(--border-h)";e.currentTarget.style.boxShadow="var(--shadow-md)";}} onMouseLeave={e=>{e.currentTarget.style.borderColor="var(--border)";e.currentTarget.style.boxShadow="none";}}>
+                <ScoreCircle score={v.ars} size={44}/><div style={{flex:1,minWidth:0}}>
+                  <div style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}><span style={{fontFamily:"var(--mono)",fontSize:13,fontWeight:700}}>{v.cve_id}</span><TierTag tier={v.priority_tier}/>{v.kev_listed&&<KevTag/>}</div>
+                  <div style={{fontSize:11,color:"var(--text-3)",marginTop:3,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{v.affected_product} — {v.description?.slice(0,90)}…</div></div><EcuTag d={v.ecu_domain}/>
+              </div>))}
+          </Card>
+        </div>}
+
+        {view==="search"&&<div style={{display:"flex",flexDirection:"column",gap:14}}>
+          <Card pad="14px 16px" style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"center"}}>
+            <div style={{flex:1,position:"relative",minWidth:220}}>
+              <span style={{position:"absolute",left:14,top:"50%",transform:"translateY(-50%)",color:"var(--text-3)",fontSize:15}}>🔍</span>
+              <input value={search} onChange={e=>setSearch(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")liveSearch(search);}} placeholder="Search CVE, product, domain, CWE…"
+                style={{width:"100%",background:"var(--surface-2)",border:"1px solid var(--border)",borderRadius:10,padding:"10px 14px 10px 40px",color:"var(--text-0)",fontFamily:"var(--mono)",fontSize:13,outline:"none"}}/>
+            </div>
+            <select value={fDomain} onChange={e=>setFDomain(e.target.value)} style={sel}><option value="all">All Domains</option>{Object.entries(ECU).map(([k,v])=><option key={k} value={k}>{v.ico} {v.name}</option>)}</select>
+            <select value={fPriority} onChange={e=>setFPriority(e.target.value)} style={sel}><option value="all">All Priorities</option>{Object.entries(TIERS).map(([k,v])=><option key={k} value={k}>{v.tag}</option>)}</select>
+            <button onClick={()=>setFKEV(!fKEV)} style={{...sel,background:fKEV?"#fff1f2":"var(--surface-2)",border:fKEV?"1px solid #fecdd3":"1px solid var(--border)",color:fKEV?"#e11d48":"var(--text-2)",fontWeight:700}}>⚡ KEV</button>
+            <button onClick={()=>liveSearch(search)} disabled={liveSearching||search.length<3} style={{...sel,background:"var(--blue-bg)",border:"1px solid #bfdbfe",color:"var(--blue)",fontWeight:700,opacity:search.length<3?.4:1}}>
+              {liveSearching?"⏳ Searching…":"🔍 Search NVD Live"}</button>
+            <select value={sortBy} onChange={e=>setSortBy(e.target.value)} style={sel}><option value="ars_desc">ARS ↓</option><option value="ars_asc">ARS ↑</option><option value="cvss_desc">CVSS ↓</option><option value="date_desc">Date ↓</option></select>
+          </Card>
+          <div style={{fontSize:12,color:"var(--text-2)"}}><strong style={{color:"var(--text-0)"}}>{filtered.length}</strong> of {vulns.length} vulnerabilities {loading&&<span style={{color:"var(--amber)"}}>(loading…)</span>}</div>
+          <Card pad="0" style={{overflow:"hidden"}}>
+            <table style={{width:"100%",borderCollapse:"collapse"}}>
+              <thead><tr style={{background:"var(--surface-2)"}}>
+                {["ARS","CVE ID","Priority","ECU Domain","CVSS","Exploit","Product","KEV","Date"].map(h=>(<th key={h} style={{padding:"12px 14px",textAlign:"left",fontSize:11,fontWeight:700,color:"var(--text-3)",textTransform:"uppercase",letterSpacing:".04em",borderBottom:"1px solid var(--border)"}}>{h}</th>))}
+              </tr></thead>
+              <tbody>{filtered.slice(0,200).map((v,i)=>(
+                <tr key={v.cve_id} onClick={()=>setSelected(v)} style={{borderBottom:"1px solid var(--border)",cursor:"pointer",transition:"background .15s",animation:`fadeUp .3s ease ${Math.min(i*.015,.3)}s both`}}
+                  onMouseEnter={e=>e.currentTarget.style.background="var(--surface-2)"} onMouseLeave={e=>e.currentTarget.style.background="transparent"}>
+                  <td style={{padding:"10px 14px"}}><ScoreCircle score={v.ars} size={40}/></td>
+                  <td style={{padding:"10px 14px",fontFamily:"var(--mono)",fontSize:12,fontWeight:700}}>{v.cve_id}</td>
+                  <td style={{padding:"10px 14px"}}><TierTag tier={v.priority_tier}/></td>
+                  <td style={{padding:"10px 14px"}}><EcuTag d={v.ecu_domain}/></td>
+                  <td style={{padding:"10px 14px",fontFamily:"var(--mono)",fontSize:12,color:"var(--text-2)"}}>{v.cvss_v4_base_score}</td>
+                  <td style={{padding:"10px 14px"}}><Tag>{v.exploit_maturity}</Tag></td>
+                  <td style={{padding:"10px 14px",fontSize:11,color:"var(--text-2)",maxWidth:160,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{v.affected_product}</td>
+                  <td style={{padding:"10px 14px"}}>{v.kev_listed?<KevTag/>:<span style={{color:"var(--border-h)"}}>—</span>}</td>
+                  <td style={{padding:"10px 14px",fontFamily:"var(--mono)",fontSize:10,color:"var(--text-3)"}}>{v.published}</td>
+                </tr>))}</tbody>
+            </table>
+            {filtered.length===0&&!loading&&<div style={{padding:48,textAlign:"center",color:"var(--text-3)"}}><div style={{fontSize:36,marginBottom:8}}>🔍</div>No results. Try "Search NVD Live" to query the NVD directly.</div>}
+          </Card>
+          <div style={{display:"flex",gap:8}}>
+            <button onClick={()=>{const d=filtered.slice(0,500).map(v=>({cve_id:v.cve_id,ars:v.ars,priority_tier:v.priority_tier,ecu_domain:v.ecu_domain,cvss:v.cvss_v4_base_score,exploit:v.exploit_maturity,kev:v.kev_listed,product:v.affected_product}));const b=new Blob([JSON.stringify(d,null,2)],{type:"application/json"});const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download="AutoVIA_Export.json";a.click();}} style={expBtn}>⬇ Export JSON</button>
+            <button onClick={()=>{const csv=["CVE,ARS,Priority,ECU,CVSS,Exploit,KEV,Product",...filtered.slice(0,500).map(v=>`${v.cve_id},${v.ars},${v.priority_tier},${v.ecu_domain},${v.cvss_v4_base_score},${v.exploit_maturity},${v.kev_listed},"${(v.affected_product||"").replace(/"/g,"'")}"`)].join("\n");const b=new Blob([csv],{type:"text/csv"});const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download="AutoVIA_Export.csv";a.click();}} style={expBtn}>⬇ Export CSV</button>
+          </div>
+        </div>}
+
+        {view==="assess"&&<ManualInput onCompute={handleManual}/>}
+      </main>
+
+      {selected&&<><div onClick={()=>setSelected(null)} style={{position:"fixed",top:0,left:0,right:0,bottom:0,background:"rgba(0,0,0,.3)",zIndex:999}}/><DetailPanel v={selected} onClose={()=>setSelected(null)}/></>}
+
+      <footer style={{padding:"16px 32px",borderTop:"1px solid var(--border)",background:"var(--surface)",display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:8}}>
+        <span style={{fontSize:11,color:"var(--text-3)"}}>Auto-VIA v3.0 — Automotive Vulnerability Intelligence Aggregator</span>
+        <div style={{display:"flex",gap:6}}>{["ISO/SAE 21434","UNECE R155","CVSS v4.0","NVD API","CISA KEV"].map(s=><Tag key={s}>{s}</Tag>)}</div>
+      </footer>
+    </div>
+  );
+}
