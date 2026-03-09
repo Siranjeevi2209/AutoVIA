@@ -1,0 +1,176 @@
+{
+  "generated_at": "2026-03-09T03:37:33.165Z",
+  "version": "1.0",
+  "total_cves_analyzed": 0,
+  "cve_analysis": {},
+  "domain_summaries": {
+    "gateway": {
+      "risk_level": "High",
+      "summary": "Gateway ECU presents elevated risk with 693 CVEs including 1 KEV-listed vulnerability actively exploited in the wild. The predominance of remote external attack vectors (394 CVEs) creates significant exposure for this critical network boundary component at ASIL-B safety level.",
+      "key_concerns": [
+        "KEV-listed vulnerability indicates active exploitation threat requiring immediate patching",
+        "High concentration of remote external attack vectors (56.8%) exposes vehicle networks to internet-based threats",
+        "Linux kernel dominance (178 CVEs) in gateway function creates systemic risk for vehicle-to-cloud communications"
+      ],
+      "recommended_actions": [
+        "Implement immediate security patch for KEV-listed vulnerability with coordinated deployment strategy",
+        "Deploy network segmentation and deep packet inspection at gateway boundaries to limit remote attack surface",
+        "Establish secure boot chain and runtime attestation for Linux kernel components with automotive-grade hardening"
+      ],
+      "compliance_note": "Gateway security failures directly impact ISO 21434 cybersecurity risk management requirements and UNECE R155 monitoring obligations for vehicle-to-external network interfaces."
+    },
+    "adas": {
+      "risk_level": "Medium",
+      "summary": "ASIL-D ADAS domain shows concerning vulnerability exposure with 133 CVEs predominantly affecting NVIDIA GPU drivers and Android components. While no P0/P1 vulnerabilities currently exist, the high CVE count in safety-critical autonomous systems presents significant risk escalation potential.",
+      "key_concerns": [
+        "NVIDIA GPU driver vulnerabilities (32 CVEs total) in perception/sensor fusion systems could compromise object detection accuracy",
+        "Android OS vulnerabilities (11 CVEs) may expose infotainment-ADAS interface leading to unauthorized system access",
+        "High local attack surface (88 CVEs) indicates insufficient ECU hardening for ASIL-D requirements"
+      ],
+      "recommended_actions": [
+        "Implement immediate GPU driver firmware updates and establish automated patch management for NVIDIA components",
+        "Deploy network segmentation between infotainment Android systems and safety-critical ADAS functions",
+        "Conduct penetration testing focused on local attack vectors and implement ECU-level access controls"
+      ],
+      "compliance_note": "The vulnerability exposure in ASIL-D systems requires enhanced monitoring per ISO 21434 clause 15 and may impact UNECE R155 type approval if attack vectors compromise vehicle safety functions."
+    },
+    "infotainment": {
+      "risk_level": "Medium",
+      "summary": "The Infotainment domain shows elevated vulnerability exposure with 184 CVEs and significant remote attack surface, but reduced immediate safety risk due to QM ASIL rating. Remote external attack vectors (120 exposures) pose the primary threat for lateral movement and data exfiltration.",
+      "key_concerns": [
+        "High remote external attack surface (120 exposures) enables potential vehicle network entry points",
+        "Android and ROS2 vulnerabilities create multi-vector exploitation paths",
+        "Physical access vulnerabilities (12) could enable persistent compromise during service intervals"
+      ],
+      "recommended_actions": [
+        "Implement network segmentation between infotainment and safety-critical domains",
+        "Deploy application sandboxing and privilege separation for Android/third-party apps",
+        "Establish secure boot chain and firmware integrity verification for head units"
+      ],
+      "compliance_note": "While QM-rated, this domain requires cybersecurity monitoring per ISO 21434 clause 15 and R155 vehicle network protection requirements."
+    },
+    "powertrain": {
+      "risk_level": "Medium",
+      "summary": "The Powertrain/Engine domain shows elevated vulnerability exposure with 70 CVEs concentrated in VxWorks RTOS and charging infrastructure components, though no Critical/High priority threats exist. The 87% remote external attack surface presents significant network-based risk vectors that could compromise engine control functions.",
+      "key_concerns": [
+        "VxWorks RTOS vulnerabilities (30 CVEs) affecting real-time engine control systems with potential for remote code execution",
+        "EV charging infrastructure vulnerabilities creating attack vectors into powertrain systems through CCS/CHAdeMO protocols",
+        "High remote external attack surface (61 CVEs) exposing engine ECUs to internet-based attacks via telematics and OTA channels"
+      ],
+      "recommended_actions": [
+        "Implement network segmentation isolating powertrain ECUs from external networks with automotive firewall rules",
+        "Deploy VxWorks security patches and enable RTOS hardening features for engine control modules",
+        "Establish secure boot and code signing for powertrain firmware updates per ISO 21434 clause 9"
+      ],
+      "compliance_note": "ASIL-C classification requires enhanced cybersecurity measures per ISO 21434 clause 15 and UNECE R155 monitoring of powertrain attack vectors."
+    },
+    "telematics": {
+      "risk_level": "Medium",
+      "summary": "The Telematics Unit presents a moderate risk profile with 178 total CVEs but no critical or high-severity vulnerabilities currently identified. The substantial remote external attack surface (111 CVEs) is concerning given the unit's internet connectivity, though the ASIL-A classification limits direct safety impact.",
+      "key_concerns": [
+        "High volume of remote external vulnerabilities (111) in internet-facing telematics creating broad attack surface",
+        "WolfSSL dominance (54 CVEs) in cryptographic stack poses concentrated risk to secure communications",
+        "ThreadX networking components (31 combined CVEs) expose RTOS-level vulnerabilities that could enable lateral movement"
+      ],
+      "recommended_actions": [
+        "Implement network segmentation isolating telematics from safety-critical CAN buses per ISO 21434 clause 9.4.2",
+        "Deploy automotive firewall rules restricting telematics to authorized external services only",
+        "Prioritize WolfSSL and ThreadX component updates with coordinated vulnerability disclosure tracking"
+      ],
+      "compliance_note": "While ASIL-A limits direct safety requirements, UNECE R155 mandates robust cybersecurity monitoring and incident response for all connected vehicle systems including telematics units."
+    },
+    "steering": {
+      "risk_level": "Medium",
+      "summary": "Power Steering ECU has moderate cybersecurity risk with one CVE affecting a remote external attack surface. Despite ASIL-D safety criticality, the absence of Critical/High severity vulnerabilities limits immediate threat exposure.",
+      "key_concerns": [
+        "ASIL-D safety-critical function with remote attack surface exposure",
+        "Network-based vulnerability in HTTP codec could enable lateral movement",
+        "Single point of failure in steering control system"
+      ],
+      "recommended_actions": [
+        "Implement network segmentation to isolate steering ECU from external interfaces",
+        "Deploy ECU-level firewall rules restricting HTTP traffic to essential communications",
+        "Establish continuous monitoring for steering system anomalies and network traffic"
+      ],
+      "compliance_note": "ASIL-D classification requires enhanced cybersecurity measures per ISO 21434 clause 15 and may trigger UNECE R155 monitoring obligations for safety-critical remote vulnerabilities."
+    },
+    "braking": {
+      "risk_level": "Medium",
+      "summary": "Electronic Braking domain shows moderate risk with 8 vulnerabilities across safety-critical ASIL-D systems, though no Critical/High severity CVEs present. The 6 remote-external attack surfaces create significant exposure for this life-safety system, particularly concerning Tesla Model 3 firmware vulnerabilities.",
+      "key_concerns": [
+        "Remote attack vectors (6/8) in ASIL-D braking systems pose life-safety risks",
+        "Tesla Model 3 firmware vulnerabilities (25% of total) indicate OEM-specific exposure",
+        "Outdated components (GnuTLS 3.0.0, PostgreSQL 6.5.0) suggest insufficient software lifecycle management"
+      ],
+      "recommended_actions": [
+        "Implement network segmentation to isolate braking ECUs from external interfaces",
+        "Deploy automotive-grade intrusion detection for CAN/Ethernet monitoring",
+        "Establish mandatory security patching SLA for ASIL-D components within 30 days"
+      ],
+      "compliance_note": "ASIL-D classification requires enhanced cybersecurity controls per ISO 21434 clause 9 and may trigger UNECE R155 monitoring obligations for braking system vulnerabilities."
+    },
+    "diagnostics": {
+      "risk_level": "Medium",
+      "summary": "Diagnostics domain shows concerning exposure with 12 remote attack vectors despite ASIL QM classification. The concentration of vulnerabilities in OBD-II dongle firmware (3 CVEs) creates a significant gateway risk for unauthorized vehicle access through diagnostic ports.",
+      "key_concerns": [
+        "OBD-II dongle firmware vulnerabilities enable remote vehicle access bypassing authentication",
+        "Diagnostic port exposure allows lateral movement to critical vehicle networks",
+        "Web-based diagnostic interfaces present additional remote attack surfaces"
+      ],
+      "recommended_actions": [
+        "Implement diagnostic port access controls and session management per ISO 21434 clause 9.4",
+        "Deploy network segmentation between diagnostic and critical vehicle domains",
+        "Update OBD-II dongle firmware and enforce secure diagnostic communication protocols"
+      ],
+      "compliance_note": "ASIL QM classification requires cybersecurity risk treatment per R155 Article 7, with particular attention to diagnostic interface security controls."
+    },
+    "body": {
+      "risk_level": "Medium",
+      "summary": "Body Control domain shows moderate cybersecurity exposure with 7 vulnerabilities predominantly accessible via remote adjacent networks (6/7), indicating potential exploitation through compromised vehicle networks or proximity-based attacks. The ASIL QM classification limits safety impact but exposes comfort, convenience, and security functions to potential compromise.",
+      "key_concerns": [
+        "Remote adjacent attack surface dominance (85%) enables lateral movement from compromised vehicle networks",
+        "Passive keyless entry system vulnerability creates physical security bypass risk",
+        "Multiple OEM firmware vulnerabilities indicate supply chain cybersecurity gaps"
+      ],
+      "recommended_actions": [
+        "Implement network segmentation to isolate body control functions from critical vehicle networks",
+        "Deploy firmware integrity verification for all body control ECUs",
+        "Establish secure update mechanisms for keyless entry and convenience systems"
+      ],
+      "compliance_note": "ASIL QM classification requires basic cybersecurity measures per ISO 21434 clause 9, with R155 mandating vulnerability management and secure communication for all connected functions regardless of safety classification."
+    },
+    "chassis": {
+      "risk_level": "Medium",
+      "summary": "Chassis Control ECU presents moderate risk with 2 CVEs affecting Infineon S-Gold 2 PMB 8876 baseband processors, though no critical or high severity vulnerabilities are currently identified. The ASIL-C safety rating indicates potential for serious injury if compromised, with both remote adjacent and physical attack vectors present.",
+      "key_concerns": [
+        "ASIL-C safety-critical functions could be compromised affecting vehicle stability and braking systems",
+        "Infineon baseband processor vulnerabilities may enable cellular network exploitation",
+        "Dual attack surfaces (remote adjacent + physical) expand threat landscape for chassis manipulation"
+      ],
+      "recommended_actions": [
+        "Implement network segmentation isolating chassis ECU from infotainment and telematics domains",
+        "Deploy ECU-level firewall rules blocking unauthorized CAN/automotive Ethernet traffic to chassis functions",
+        "Coordinate with Infineon for firmware security patches and establish secure update mechanism"
+      ],
+      "compliance_note": "Medium risk chassis vulnerabilities require cybersecurity monitoring per ISO 21434 clause 15 and may necessitate R155 cybersecurity incident response if exploitation affects vehicle safety systems."
+    }
+  },
+  "overall_report": {
+    "executive_summary": "Critical cybersecurity exposure identified with 1290 unclassified CVEs across all vehicle domains, creating significant attack surface with 745 remote external vectors. Gateway ECUs represent highest concentration of vulnerabilities at 693 instances, posing systemic risk to entire vehicle architecture. One KEV-listed vulnerability indicates active exploitation in the wild, demanding immediate attention. Current vulnerability landscape suggests inadequate CSMS implementation and monitoring capabilities.",
+    "risk_rating": "Critical",
+    "top_risks": [
+      "Gateway ECU compromise enabling lateral movement across all vehicle networks",
+      "Remote exploitation of 745 external attack vectors bypassing perimeter defenses",
+      "ADAS system vulnerabilities potentially impacting functional safety and ASIL-D requirements",
+      "Telematics vulnerabilities enabling persistent remote access and data exfiltration",
+      "Safety-critical domain exposure in steering and braking systems despite lower counts"
+    ],
+    "immediate_actions": [
+      "Implement emergency patch management for the KEV-listed vulnerability within 72 hours",
+      "Deploy network segmentation and firewall rules to isolate gateway ECUs from non-critical domains",
+      "Establish vulnerability prioritization framework based on ASIL levels and attack surface exposure"
+    ],
+    "compliance_status": "Current state indicates non-compliance with ISO/SAE 21434 cybersecurity engineering lifecycle requirements due to lack of vulnerability classification and risk assessment. UNECE R155 CSMS monitoring and response obligations are not being met with 1290 unaddressed vulnerabilities.",
+    "trend_note": "Risk trajectory is increasing given the complete absence of vulnerability prioritization and the presence of actively exploited vulnerabilities in critical automotive infrastructure."
+  }
+}
