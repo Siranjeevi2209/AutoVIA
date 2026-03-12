@@ -31,4 +31,6 @@ jobs:
           git config --local user.name "Auto-VIA Bot"
           git add public/cve-database.json
           git diff --quiet --cached || git commit -m "chore: update CVE database $(date -u +'%Y-%m-%d')"
+          git pull --rebase
           git push
+          
