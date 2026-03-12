@@ -2,7 +2,7 @@ name: Update Auto-VIA CVE Database
 
 on:
   schedule:
-    - cron: '0 5 * * *'   # Daily at 12:00 AM EST (5:00 AM UTC)
+    - cron: '0 5 * * *'
   workflow_dispatch:
 
 jobs:
@@ -13,6 +13,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull latest changes
+        run: git pull origin main
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -29,13 +35,11 @@ jobs:
         run: |
           git config --local user.email "autovia-bot@github.com"
           git config --local user.name "Auto-VIA Bot"
+          git pull origin main
           git add public/cve-database.json
           if git diff --quiet --cached; then
             echo "No changes to commit"
           else
             git commit -m "chore: update CVE database $(date -u +'%Y-%m-%d')"
-            git pull --rebase
-            git push
+            git push origin main
           fi
-
-          
