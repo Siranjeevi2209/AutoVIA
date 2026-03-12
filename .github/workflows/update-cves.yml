@@ -30,7 +30,11 @@ jobs:
           git config --local user.email "autovia-bot@github.com"
           git config --local user.name "Auto-VIA Bot"
           git add public/cve-database.json
-          git diff --quiet --cached || git commit -m "chore: update CVE database $(date -u +'%Y-%m-%d')"
-          git pull --rebase
-          git push
+          if git diff --quiet --cached; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update CVE database $(date -u +'%Y-%m-%d')"
+            git pull --rebase
+            git push
+          fi
           
