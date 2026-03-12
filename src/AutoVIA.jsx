@@ -407,17 +407,7 @@ FILTER COMMANDS: If the user wants to view specific CVEs in the dashboard, appen
       {/* HEADER */}
       <header style={{padding:"0 32px",height:64,display:"flex",alignItems:"center",justifyContent:"space-between",borderBottom:"1px solid var(--border)",background:"var(--surface)",position:"sticky",top:0,zIndex:100}}>
         <div style={{display:"flex",alignItems:"center",gap:12}}>
-          <svg width="38" height="38" viewBox="0 0 38 38" style={{flexShrink:0}}>
-            <defs>
-              <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#2563eb"/>
-                <stop offset="100%" stopColor="#0891b2"/>
-              </linearGradient>
-            </defs>
-            <rect width="38" height="38" rx="10" fill="url(#logoGrad)"/>
-            <path d="M10 26L15.5 11h2.8l2.2 6.5L22.7 11h2.8L31 26h-3l-3.5-10.5L25 21h-3.5l-2.5-5.5L15.5 26z" fill="#fff" opacity=".95"/>
-            <rect x="9" y="27.5" width="20" height="2" rx="1" fill="#fff" opacity=".5"/>
-          </svg>
+          <img src="/autovia-logo.png" alt="Auto-VIA" width={38} height={38} style={{flexShrink:0, borderRadius:8}} />
           <div><div style={{fontFamily:"var(--font)",fontWeight:800,fontSize:16,color:"var(--text-0)",letterSpacing:"-.02em"}}>Auto-VIA</div>
             <div style={{fontSize:10,color:"var(--text-3)",fontWeight:500,letterSpacing:".06em"}}>AUTOMOTIVE VULNERABILITY INTELLIGENCE</div></div>
         </div>
