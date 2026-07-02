@@ -1,0 +1,2258 @@
+{
+  "_meta": {
+    "purpose": "Feeds the two rule-based signals (P_cpe, P_keyword) of the AutoVIA relevance classifier.",
+    "generated_from": "AutoVIA_Relevance_Datasets_FINAL.xlsx",
+    "how_to_use": "cpe_products match the STRUCTURED CPE vendor/product fields; keyword_terms match as WHOLE WORDS in the description. 'weight': 1.0=unambiguous, 0.5=shared (needs corroboration), 0.3=weakly indicative.",
+    "honest_limitation": "Curated, NON-exhaustive list. Cannot cover the whole automotive supply chain; shared components are automotive by context, not name. The ML signal (P_ml) covers what these lists miss.",
+    "do_not_edit": "This file is generated. Edit the Excel master and re-run xlsx_to_json.py instead."
+  },
+  "cpe_products": [
+    {
+      "term": "adaptive autosar",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "adas",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "advanced driver assistance",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "android automotive",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "android automotive os",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "apollo auto",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "aptiv",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "autosar",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "autoware",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "baidu apollo",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "blackberry qnx",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "canopen",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "classic autosar",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "comma.ai",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "digital cockpit",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "doip",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "dspace",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "eb corbos",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "eb tresos",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "elektrobit",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "flexray",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "green hills integrity",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "infotainment",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "instrument cluster",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "integrity rtos",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "ivi",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "j1939",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "mobileye",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "nvidia drive",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "nvidia drive os",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "nvidia driveworks",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "obd-ii",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "openpilot",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "qnx",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "socketcan",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "some/ip",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "someip",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "telematics control unit",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "uds",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "vector canoe",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "vector cast",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "vehicle gateway",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "veoneer",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "wind river vxworks automotive",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "zf",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "bluetooth",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "bluez",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "boringssl",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "bosch",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "continental",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "dbus",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "denso",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "freertos",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "grpc",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "harman",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "harman kardon",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "hyundai mobis",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "libssl",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "libwebsockets",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "linux",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "linux kernel",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "magna",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "marelli",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "mbed tls",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "mbedtls",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "micrium",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "mosquitto",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "nucleus rtos",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "nxp i.mx",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "nxp s32",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "openssl",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "paho mqtt",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "panasonic automotive",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "protobuf",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "qualcomm snapdragon automotive",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "renesas r-car",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "systemd",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "texas instruments jacinto",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "ti jacinto",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "valeo",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "visteon",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "wolfssl",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "zephyr",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "azure rtos",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "buildroot",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "contiki",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "cyclonedds",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "cypress",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "das u-boot",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "eprosima",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "fast-dds",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "infineon",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "lwip",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "microchip",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "nxp",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "openembedded",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "renesas",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "silicon labs",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "stmicroelectronics",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "threadx",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "u-boot",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "vxworks",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "yocto",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "automotive grade linux",
+      "weight": 1.0,
+      "notes": "Automotive Linux platform term; source: https://www.automotivelinux.org/"
+    },
+    {
+      "term": "agl",
+      "weight": 0.5,
+      "notes": "Acronym; use with corroboration. Automotive Grade Linux source: https://www.automotivelinux.org/"
+    },
+    {
+      "term": "genivi",
+      "weight": 1.0,
+      "notes": "Automotive IVI/connectivity ecosystem predecessor to COVESA."
+    },
+    {
+      "term": "covesa",
+      "weight": 1.0,
+      "notes": "Connected Vehicle Systems Alliance; source: https://covesa.global/"
+    },
+    {
+      "term": "vehicle signal specification",
+      "weight": 1.0,
+      "notes": "COVESA VSS vehicle-data model; source: https://covesa.global/project/vehicle-signal-specification/"
+    },
+    {
+      "term": "vss",
+      "weight": 0.5,
+      "notes": "Acronym; automotive when tied to COVESA Vehicle Signal Specification."
+    },
+    {
+      "term": "eclipse sdv",
+      "weight": 1.0,
+      "notes": "Eclipse software-defined vehicle ecosystem; source: https://eclipsesdv.org/"
+    },
+    {
+      "term": "eclipse kuksa",
+      "weight": 1.0,
+      "notes": "Eclipse SDV vehicle/data project identifier."
+    },
+    {
+      "term": "kuksa",
+      "weight": 0.5,
+      "notes": "Eclipse SDV project term; needs corroboration."
+    },
+    {
+      "term": "kuksa.val",
+      "weight": 1.0,
+      "notes": "Eclipse SDV/COVESA vehicle data project term."
+    },
+    {
+      "term": "eclipse velocitas",
+      "weight": 1.0,
+      "notes": "Eclipse SDV project identifier."
+    },
+    {
+      "term": "velocitas",
+      "weight": 0.5,
+      "notes": "Eclipse SDV project term; could be broader brand/name."
+    },
+    {
+      "term": "aaos",
+      "weight": 0.5,
+      "notes": "Android Automotive OS acronym; use with corroboration."
+    },
+    {
+      "term": "android auto",
+      "weight": 0.5,
+      "notes": "Automotive infotainment/connectivity term but not always vehicle-internal."
+    },
+    {
+      "term": "apple carplay",
+      "weight": 0.5,
+      "notes": "In-vehicle projection platform; usually infotainment related."
+    },
+    {
+      "term": "carplay",
+      "weight": 0.5,
+      "notes": "In-vehicle projection platform; use with corroboration."
+    },
+    {
+      "term": "mirrorlink",
+      "weight": 0.5,
+      "notes": "Vehicle smartphone projection ecosystem; corroborate with IVI/head-unit context."
+    },
+    {
+      "term": "open alliance",
+      "weight": 1.0,
+      "notes": "Automotive Ethernet alliance; source: https://opensig.org/"
+    },
+    {
+      "term": "oabr",
+      "weight": 1.0,
+      "notes": "OPEN Alliance BroadR-Reach automotive Ethernet abbreviation."
+    },
+    {
+      "term": "broadr-reach",
+      "weight": 1.0,
+      "notes": "Automotive Ethernet PHY term; source: https://opensig.org/"
+    },
+    {
+      "term": "broad-r reach",
+      "weight": 1.0,
+      "notes": "Automotive Ethernet PHY term."
+    },
+    {
+      "term": "100base-t1",
+      "weight": 1.0,
+      "notes": "Single-pair Ethernet used in automotive Ethernet context."
+    },
+    {
+      "term": "1000base-t1",
+      "weight": 1.0,
+      "notes": "Single-pair Ethernet used in automotive Ethernet context."
+    },
+    {
+      "term": "10base-t1s",
+      "weight": 0.5,
+      "notes": "Single-pair Ethernet; automotive-relevant but not automotive-only."
+    },
+    {
+      "term": "802.3bw",
+      "weight": 0.5,
+      "notes": "IEEE single-pair Ethernet clause; automotive-relevant but standards term."
+    },
+    {
+      "term": "802.3bp",
+      "weight": 0.5,
+      "notes": "IEEE single-pair Ethernet clause; automotive-relevant but standards term."
+    },
+    {
+      "term": "802.3cg",
+      "weight": 0.5,
+      "notes": "IEEE single-pair Ethernet clause; automotive-relevant but standards term."
+    },
+    {
+      "term": "tsn",
+      "weight": 0.3,
+      "notes": "Time-sensitive networking is automotive-relevant but broad."
+    },
+    {
+      "term": "iso 15118",
+      "weight": 1.0,
+      "notes": "EV charging / vehicle-to-grid communication term; source: https://www.charin.global/technology/ccs-specification"
+    },
+    {
+      "term": "din 70121",
+      "weight": 1.0,
+      "notes": "EV charging communication term."
+    },
+    {
+      "term": "iec 61851",
+      "weight": 0.5,
+      "notes": "EV conductive charging standard; infrastructure + vehicle context."
+    },
+    {
+      "term": "sae j1772",
+      "weight": 1.0,
+      "notes": "EV charging connector/protocol term."
+    },
+    {
+      "term": "j1772",
+      "weight": 0.5,
+      "notes": "EV charging term; acronym-like, corroborate with EV charging context."
+    },
+    {
+      "term": "ccs1",
+      "weight": 1.0,
+      "notes": "Combined Charging System connector term; source: https://www.charin.global/technology/ccs-specification"
+    },
+    {
+      "term": "ccs2",
+      "weight": 1.0,
+      "notes": "Combined Charging System connector term; source: https://www.charin.global/technology/ccs-specification"
+    },
+    {
+      "term": "chademo",
+      "weight": 1.0,
+      "notes": "EV charging standard term."
+    },
+    {
+      "term": "nacs",
+      "weight": 0.5,
+      "notes": "EV charging connector acronym; corroborate with EV context."
+    },
+    {
+      "term": "ocpp",
+      "weight": 0.5,
+      "notes": "Charging infrastructure protocol; relevant for EVSE/charging CVEs."
+    },
+    {
+      "term": "open charge point protocol",
+      "weight": 0.5,
+      "notes": "Charging infrastructure protocol; relevant to EV charging."
+    },
+    {
+      "term": "can fd",
+      "weight": 1.0,
+      "notes": "Vehicle-network term, especially with CAN context."
+    },
+    {
+      "term": "can xl",
+      "weight": 1.0,
+      "notes": "Vehicle-network term, especially with CAN context."
+    },
+    {
+      "term": "iso-tp",
+      "weight": 1.0,
+      "notes": "ISO 15765 transport protocol over CAN."
+    },
+    {
+      "term": "isotp",
+      "weight": 1.0,
+      "notes": "ISO 15765 transport protocol over CAN."
+    },
+    {
+      "term": "iso 15765",
+      "weight": 1.0,
+      "notes": "Diagnostics over CAN transport protocol term."
+    },
+    {
+      "term": "iso 14229",
+      "weight": 1.0,
+      "notes": "UDS diagnostics standard term."
+    },
+    {
+      "term": "iso 13400",
+      "weight": 1.0,
+      "notes": "DoIP diagnostics standard term."
+    },
+    {
+      "term": "iso 11898",
+      "weight": 0.5,
+      "notes": "CAN standard; automotive-heavy but used outside vehicles too."
+    },
+    {
+      "term": "j1708",
+      "weight": 1.0,
+      "notes": "Heavy-duty vehicle network term."
+    },
+    {
+      "term": "j1587",
+      "weight": 1.0,
+      "notes": "Heavy-duty vehicle diagnostic/network term."
+    },
+    {
+      "term": "j2534",
+      "weight": 1.0,
+      "notes": "Vehicle pass-through/reprogramming term."
+    },
+    {
+      "term": "xcp",
+      "weight": 0.5,
+      "notes": "Calibration protocol; automotive-relevant but acronym can be broad."
+    },
+    {
+      "term": "ccp",
+      "weight": 0.5,
+      "notes": "CAN calibration protocol; acronym is broad, corroborate."
+    },
+    {
+      "term": "secoc",
+      "weight": 1.0,
+      "notes": "AUTOSAR Secure Onboard Communication term."
+    },
+    {
+      "term": "autosar secoc",
+      "weight": 1.0,
+      "notes": "AUTOSAR Secure Onboard Communication term."
+    },
+    {
+      "term": "ara::com",
+      "weight": 1.0,
+      "notes": "AUTOSAR Adaptive communication API term."
+    },
+    {
+      "term": "ara com",
+      "weight": 1.0,
+      "notes": "AUTOSAR Adaptive communication API term."
+    },
+    {
+      "term": "autosar rte",
+      "weight": 1.0,
+      "notes": "AUTOSAR Runtime Environment term."
+    },
+    {
+      "term": "autosar bsw",
+      "weight": 1.0,
+      "notes": "AUTOSAR Basic Software term."
+    },
+    {
+      "term": "vector canalyzer",
+      "weight": 1.0,
+      "notes": "Vector automotive network tool identifier."
+    },
+    {
+      "term": "canalyzer",
+      "weight": 0.5,
+      "notes": "Vector tool name; confirm with vendor/product CPE."
+    },
+    {
+      "term": "vector candela",
+      "weight": 1.0,
+      "notes": "Vector diagnostics tool identifier."
+    },
+    {
+      "term": "candela",
+      "weight": 0.5,
+      "notes": "Vector tool name; generic word, needs corroboration."
+    },
+    {
+      "term": "vector vflash",
+      "weight": 1.0,
+      "notes": "Vector flashing/reprogramming tool identifier."
+    },
+    {
+      "term": "vflash",
+      "weight": 0.5,
+      "notes": "Automotive flashing tool term; needs corroboration."
+    },
+    {
+      "term": "vector vn",
+      "weight": 0.5,
+      "notes": "Vector interface family; use with Vector context."
+    },
+    {
+      "term": "vector vhsm",
+      "weight": 1.0,
+      "notes": "Vector embedded HSM/security component identifier."
+    },
+    {
+      "term": "etas",
+      "weight": 1.0,
+      "notes": "Automotive engineering tooling/vendor identifier."
+    },
+    {
+      "term": "etas inca",
+      "weight": 1.0,
+      "notes": "ETAS calibration tool identifier."
+    },
+    {
+      "term": "etas isolar",
+      "weight": 1.0,
+      "notes": "ETAS AUTOSAR tool identifier."
+    },
+    {
+      "term": "escrypt",
+      "weight": 1.0,
+      "notes": "Automotive cybersecurity tooling/vendor identifier."
+    },
+    {
+      "term": "intrepid control systems",
+      "weight": 1.0,
+      "notes": "Automotive networking tool vendor."
+    },
+    {
+      "term": "vehicle spy",
+      "weight": 1.0,
+      "notes": "Intrepid automotive network tool."
+    },
+    {
+      "term": "neovi",
+      "weight": 1.0,
+      "notes": "Intrepid vehicle-network interface family."
+    },
+    {
+      "term": "kvaser",
+      "weight": 0.5,
+      "notes": "CAN interface vendor; automotive-relevant but used elsewhere."
+    },
+    {
+      "term": "peak-system",
+      "weight": 0.5,
+      "notes": "CAN interface vendor; automotive-relevant but used elsewhere."
+    },
+    {
+      "term": "pcan",
+      "weight": 0.5,
+      "notes": "PEAK CAN interface term; corroborate."
+    },
+    {
+      "term": "canable",
+      "weight": 0.5,
+      "notes": "CAN interface project; automotive-relevant but broad."
+    },
+    {
+      "term": "cantact",
+      "weight": 0.5,
+      "notes": "CAN interface project; automotive-relevant but broad."
+    },
+    {
+      "term": "tesla",
+      "weight": 1.0,
+      "notes": "OEM/vendor CPE identifier."
+    },
+    {
+      "term": "bmw",
+      "weight": 1.0,
+      "notes": "OEM/vendor CPE identifier."
+    },
+    {
+      "term": "bmw connecteddrive",
+      "weight": 1.0,
+      "notes": "Connected-vehicle product/service identifier."
+    },
+    {
+      "term": "volkswagen",
+      "weight": 1.0,
+      "notes": "OEM/vendor CPE identifier."
+    },
+    {
+      "term": "mercedes-benz",
+      "weight": 1.0,
+      "notes": "OEM/vendor CPE identifier."
+    },
+    {
+      "term": "toyota",
+      "weight": 1.0,
+      "notes": "OEM/vendor CPE identifier."
+    },
+    {
+      "term": "honda",
+      "weight": 1.0,
+      "notes": "OEM/vendor CPE identifier."
+    },
+    {
+      "term": "nissan",
+      "weight": 1.0,
+      "notes": "OEM/vendor CPE identifier."
+    },
+    {
+      "term": "ford motor company",
+      "weight": 1.0,
+      "notes": "OEM/vendor CPE identifier; avoids overly broad 'ford'."
+    },
+    {
+      "term": "general motors",
+      "weight": 1.0,
+      "notes": "OEM/vendor CPE identifier."
+    },
+    {
+      "term": "stellantis",
+      "weight": 1.0,
+      "notes": "OEM/vendor CPE identifier."
+    },
+    {
+      "term": "renault",
+      "weight": 1.0,
+      "notes": "OEM/vendor CPE identifier."
+    },
+    {
+      "term": "hyundai",
+      "weight": 1.0,
+      "notes": "OEM/vendor CPE identifier."
+    },
+    {
+      "term": "kia",
+      "weight": 1.0,
+      "notes": "OEM/vendor CPE identifier."
+    },
+    {
+      "term": "subaru",
+      "weight": 1.0,
+      "notes": "OEM/vendor CPE identifier."
+    },
+    {
+      "term": "mazda",
+      "weight": 1.0,
+      "notes": "OEM/vendor CPE identifier."
+    },
+    {
+      "term": "volvo cars",
+      "weight": 1.0,
+      "notes": "OEM/vendor CPE identifier."
+    },
+    {
+      "term": "rivian",
+      "weight": 1.0,
+      "notes": "OEM/vendor CPE identifier."
+    },
+    {
+      "term": "lucid",
+      "weight": 0.5,
+      "notes": "Automotive OEM but common word; corroborate."
+    },
+    {
+      "term": "byd",
+      "weight": 1.0,
+      "notes": "OEM/vendor CPE identifier."
+    },
+    {
+      "term": "geely",
+      "weight": 1.0,
+      "notes": "OEM/vendor CPE identifier."
+    },
+    {
+      "term": "polestar",
+      "weight": 1.0,
+      "notes": "OEM/vendor CPE identifier."
+    },
+    {
+      "term": "alpine electronics",
+      "weight": 1.0,
+      "notes": "Automotive head-unit vendor/product context."
+    },
+    {
+      "term": "pioneer",
+      "weight": 0.5,
+      "notes": "Automotive head-unit vendor but broad brand."
+    },
+    {
+      "term": "kenwood",
+      "weight": 0.5,
+      "notes": "Automotive head-unit vendor but broad brand."
+    },
+    {
+      "term": "garmin",
+      "weight": 0.5,
+      "notes": "Navigation/telematics vendor; not automotive-only."
+    },
+    {
+      "term": "tomtom",
+      "weight": 0.5,
+      "notes": "Navigation vendor; automotive-relevant but not automotive-only."
+    },
+    {
+      "term": "uconnect",
+      "weight": 1.0,
+      "notes": "Stellantis connected infotainment product."
+    },
+    {
+      "term": "onstar",
+      "weight": 1.0,
+      "notes": "GM connected-vehicle service."
+    },
+    {
+      "term": "bluelink",
+      "weight": 0.5,
+      "notes": "Hyundai connected-car product; term could be reused."
+    },
+    {
+      "term": "ford sync",
+      "weight": 1.0,
+      "notes": "Ford infotainment/connectivity product."
+    },
+    {
+      "term": "sync 3",
+      "weight": 0.5,
+      "notes": "Ford infotainment product but generic term."
+    },
+    {
+      "term": "mib2",
+      "weight": 0.5,
+      "notes": "VW infotainment platform term; corroborate."
+    },
+    {
+      "term": "mib3",
+      "weight": 0.5,
+      "notes": "VW infotainment platform term; corroborate."
+    }
+  ],
+  "keyword_terms": [
+    {
+      "term": "adaptive cruise control",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "adas",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "adas ecu",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "advanced driver assistance",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "advanced driver-assistance",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "automated driving",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "automotive ethernet",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "autonomous driving",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "autosar",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "battery management system",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "brake control",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "can bus",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "can injection",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "controller area network",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "digital cockpit",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "doip",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "drivetrain",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "ecu",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "ecus",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "electric power steering",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "electric vehicle charging",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "electronic control unit",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "electronic control units",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "engine control module",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "ev charging",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "flexray",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "head unit",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "immobilizer",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "in-vehicle",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "in-vehicle infotainment",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "in-vehicle network",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "infotainment",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "instrument cluster",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "key fob",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "keyless entry",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "lane departure",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "lane keeping",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "lidar",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "obd-ii",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "obd2",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "on-board diagnostics",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "powertrain",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "remote keyless",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "self-driving",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "some/ip",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "steering control",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "tcu",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "telematics",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "telematics control unit",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "tire pressure monitoring",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "tpms",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "uds diagnostic",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "v2i",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "v2v",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "v2x",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "vehicle can",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "vehicle-to-everything",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "vehicle-to-vehicle",
+      "weight": 1.0,
+      "notes": ""
+    },
+    {
+      "term": "airbag",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "automobile",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "automotive",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "autonomous",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "battery management",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "bluetooth",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "brake",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "brakes",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "braking",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "camera module",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "car",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "cars",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "charging station",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "connected car",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "connected vehicle",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "dash cam",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "dashcam",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "diagnostic session",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "ev charger",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "firmware over the air",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "fleet management",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "gateway ecu",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "ignition",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "odometer",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "ota update",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "over-the-air",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "radar",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "sensor fusion",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "steering",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "ultrasonic sensor",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "vehicle",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "vehicles",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "vin",
+      "weight": 0.5,
+      "notes": ""
+    },
+    {
+      "term": "embedded firmware",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "mobility",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "telematics platform",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "transportation",
+      "weight": 0.3,
+      "notes": ""
+    },
+    {
+      "term": "software-defined vehicle",
+      "weight": 1.0,
+      "notes": "SDV phrase; source: https://eclipsesdv.org/"
+    },
+    {
+      "term": "software defined vehicle",
+      "weight": 1.0,
+      "notes": "SDV phrase; source: https://eclipsesdv.org/"
+    },
+    {
+      "term": "sdv",
+      "weight": 0.5,
+      "notes": "Acronym; automotive when tied to vehicle software context."
+    },
+    {
+      "term": "zonal architecture",
+      "weight": 1.0,
+      "notes": "Vehicle E/E architecture term."
+    },
+    {
+      "term": "zonal controller",
+      "weight": 1.0,
+      "notes": "Vehicle E/E architecture term."
+    },
+    {
+      "term": "domain controller",
+      "weight": 0.5,
+      "notes": "Automotive E/E term but broad outside vehicles."
+    },
+    {
+      "term": "central vehicle computer",
+      "weight": 1.0,
+      "notes": "Vehicle compute architecture term."
+    },
+    {
+      "term": "vehicle computer",
+      "weight": 1.0,
+      "notes": "Vehicle compute architecture term."
+    },
+    {
+      "term": "high-performance computer",
+      "weight": 0.5,
+      "notes": "Automotive HPC if vehicle/ADAS context is present."
+    },
+    {
+      "term": "automotive grade linux",
+      "weight": 1.0,
+      "notes": "Automotive platform term; source: https://www.automotivelinux.org/"
+    },
+    {
+      "term": "android automotive os",
+      "weight": 1.0,
+      "notes": "In-vehicle OS term."
+    },
+    {
+      "term": "aaos",
+      "weight": 0.5,
+      "notes": "Android Automotive OS acronym; corroborate."
+    },
+    {
+      "term": "covesa",
+      "weight": 1.0,
+      "notes": "Connected Vehicle Systems Alliance; source: https://covesa.global/"
+    },
+    {
+      "term": "vehicle signal specification",
+      "weight": 1.0,
+      "notes": "COVESA VSS; source: https://covesa.global/project/vehicle-signal-specification/"
+    },
+    {
+      "term": "vss",
+      "weight": 0.5,
+      "notes": "Acronym; automotive if tied to vehicle signals/COVESA."
+    },
+    {
+      "term": "autonomous vehicle",
+      "weight": 1.0,
+      "notes": "Automotive/autonomy term."
+    },
+    {
+      "term": "automated valet parking",
+      "weight": 1.0,
+      "notes": "ADAS/autonomy function."
+    },
+    {
+      "term": "automatic emergency braking",
+      "weight": 1.0,
+      "notes": "ADAS safety function."
+    },
+    {
+      "term": "aeb",
+      "weight": 0.5,
+      "notes": "ADAS acronym; corroborate."
+    },
+    {
+      "term": "blind spot monitoring",
+      "weight": 1.0,
+      "notes": "ADAS safety function."
+    },
+    {
+      "term": "traffic sign recognition",
+      "weight": 1.0,
+      "notes": "ADAS function."
+    },
+    {
+      "term": "lane centering",
+      "weight": 1.0,
+      "notes": "ADAS function."
+    },
+    {
+      "term": "park assist",
+      "weight": 1.0,
+      "notes": "ADAS/parking assistance term."
+    },
+    {
+      "term": "surround view",
+      "weight": 0.5,
+      "notes": "Automotive camera system context needed."
+    },
+    {
+      "term": "driver monitoring system",
+      "weight": 1.0,
+      "notes": "ADAS/interior sensing function."
+    },
+    {
+      "term": "dms",
+      "weight": 0.3,
+      "notes": "Acronym can mean many things; weak unless vehicle context present."
+    },
+    {
+      "term": "occupant monitoring",
+      "weight": 0.5,
+      "notes": "Automotive if cabin/vehicle context present."
+    },
+    {
+      "term": "adaptive high beam",
+      "weight": 1.0,
+      "notes": "ADAS/lighting function."
+    },
+    {
+      "term": "electronic stability control",
+      "weight": 1.0,
+      "notes": "Vehicle safety-control function."
+    },
+    {
+      "term": "esc",
+      "weight": 0.3,
+      "notes": "Acronym is highly ambiguous; weak alone."
+    },
+    {
+      "term": "anti-lock braking system",
+      "weight": 1.0,
+      "notes": "Vehicle braking function."
+    },
+    {
+      "term": "abs",
+      "weight": 0.3,
+      "notes": "Acronym is highly ambiguous; weak alone."
+    },
+    {
+      "term": "brake-by-wire",
+      "weight": 1.0,
+      "notes": "Safety-critical vehicle control term."
+    },
+    {
+      "term": "steer-by-wire",
+      "weight": 1.0,
+      "notes": "Safety-critical vehicle control term."
+    },
+    {
+      "term": "drive-by-wire",
+      "weight": 1.0,
+      "notes": "Vehicle control term."
+    },
+    {
+      "term": "electronic parking brake",
+      "weight": 1.0,
+      "notes": "Vehicle braking/body function."
+    },
+    {
+      "term": "epb",
+      "weight": 0.5,
+      "notes": "Automotive acronym but needs context."
+    },
+    {
+      "term": "traction control",
+      "weight": 0.5,
+      "notes": "Vehicle term, but can be generic."
+    },
+    {
+      "term": "torque vectoring",
+      "weight": 1.0,
+      "notes": "Vehicle dynamics/control term."
+    },
+    {
+      "term": "transmission control module",
+      "weight": 1.0,
+      "notes": "Vehicle ECU/module term."
+    },
+    {
+      "term": "body control module",
+      "weight": 1.0,
+      "notes": "Vehicle ECU/module term."
+    },
+    {
+      "term": "bcm",
+      "weight": 0.3,
+      "notes": "Acronym is broad; weak alone."
+    },
+    {
+      "term": "power steering",
+      "weight": 0.5,
+      "notes": "Vehicle term, but not always cybersecurity-specific."
+    },
+    {
+      "term": "steering angle sensor",
+      "weight": 1.0,
+      "notes": "Vehicle sensor term."
+    },
+    {
+      "term": "wheel speed sensor",
+      "weight": 1.0,
+      "notes": "Vehicle sensor term."
+    },
+    {
+      "term": "e-call",
+      "weight": 1.0,
+      "notes": "Vehicle emergency-call feature."
+    },
+    {
+      "term": "ecall",
+      "weight": 1.0,
+      "notes": "Vehicle emergency-call feature."
+    },
+    {
+      "term": "era-glonass",
+      "weight": 1.0,
+      "notes": "Vehicle emergency-call system."
+    },
+    {
+      "term": "battery electric vehicle",
+      "weight": 1.0,
+      "notes": "EV vehicle type."
+    },
+    {
+      "term": "bev",
+      "weight": 0.5,
+      "notes": "EV acronym; corroborate."
+    },
+    {
+      "term": "hybrid electric vehicle",
+      "weight": 1.0,
+      "notes": "Hybrid vehicle type."
+    },
+    {
+      "term": "hev",
+      "weight": 0.5,
+      "notes": "Hybrid vehicle acronym; corroborate."
+    },
+    {
+      "term": "plug-in hybrid",
+      "weight": 1.0,
+      "notes": "Vehicle powertrain type."
+    },
+    {
+      "term": "phev",
+      "weight": 0.5,
+      "notes": "Hybrid vehicle acronym; corroborate."
+    },
+    {
+      "term": "on-board charger",
+      "weight": 1.0,
+      "notes": "EV vehicle charging component."
+    },
+    {
+      "term": "onboard charger",
+      "weight": 1.0,
+      "notes": "EV vehicle charging component."
+    },
+    {
+      "term": "dc fast charging",
+      "weight": 0.5,
+      "notes": "EV/charging infrastructure context."
+    },
+    {
+      "term": "charging pile",
+      "weight": 0.5,
+      "notes": "EVSE term; infrastructure + vehicle relevance."
+    },
+    {
+      "term": "evse",
+      "weight": 0.5,
+      "notes": "EV supply equipment; infrastructure + vehicle relevance."
+    },
+    {
+      "term": "plug and charge",
+      "weight": 1.0,
+      "notes": "ISO 15118 / EV charging feature."
+    },
+    {
+      "term": "iso 15118",
+      "weight": 1.0,
+      "notes": "EV charging / V2G communication; source: https://www.charin.global/technology/ccs-specification"
+    },
+    {
+      "term": "din 70121",
+      "weight": 1.0,
+      "notes": "EV charging communication term."
+    },
+    {
+      "term": "ccs1",
+      "weight": 1.0,
+      "notes": "Combined Charging System term; source: https://www.charin.global/technology/ccs-specification"
+    },
+    {
+      "term": "ccs2",
+      "weight": 1.0,
+      "notes": "Combined Charging System term; source: https://www.charin.global/technology/ccs-specification"
+    },
+    {
+      "term": "chademo",
+      "weight": 1.0,
+      "notes": "EV charging standard term."
+    },
+    {
+      "term": "nacs",
+      "weight": 0.5,
+      "notes": "EV charging connector acronym; corroborate."
+    },
+    {
+      "term": "j1772",
+      "weight": 0.5,
+      "notes": "EV charging connector term; corroborate."
+    },
+    {
+      "term": "ocpp",
+      "weight": 0.5,
+      "notes": "Charging infrastructure protocol; automotive-adjacent."
+    },
+    {
+      "term": "open charge point protocol",
+      "weight": 0.5,
+      "notes": "Charging infrastructure protocol; automotive-adjacent."
+    },
+    {
+      "term": "vehicle-to-grid",
+      "weight": 1.0,
+      "notes": "V2G EV charging term."
+    },
+    {
+      "term": "v2g",
+      "weight": 0.5,
+      "notes": "Vehicle-to-grid acronym; corroborate."
+    },
+    {
+      "term": "automotive ethernet phy",
+      "weight": 1.0,
+      "notes": "Automotive Ethernet physical-layer term."
+    },
+    {
+      "term": "100base-t1",
+      "weight": 1.0,
+      "notes": "Automotive Ethernet term."
+    },
+    {
+      "term": "1000base-t1",
+      "weight": 1.0,
+      "notes": "Automotive Ethernet term."
+    },
+    {
+      "term": "10base-t1s",
+      "weight": 0.5,
+      "notes": "Single-pair Ethernet; automotive-relevant but broader."
+    },
+    {
+      "term": "broadr-reach",
+      "weight": 1.0,
+      "notes": "Automotive Ethernet term; source: https://opensig.org/"
+    },
+    {
+      "term": "open alliance",
+      "weight": 1.0,
+      "notes": "Automotive Ethernet alliance; source: https://opensig.org/"
+    },
+    {
+      "term": "time-sensitive networking",
+      "weight": 0.5,
+      "notes": "TSN is vehicle-relevant but cross-industry."
+    },
+    {
+      "term": "tsn",
+      "weight": 0.3,
+      "notes": "Acronym is broad; weak unless vehicle Ethernet context."
+    },
+    {
+      "term": "service-oriented middleware",
+      "weight": 0.5,
+      "notes": "Relevant to SOME/IP/SDV but broad."
+    },
+    {
+      "term": "some/ip-sd",
+      "weight": 1.0,
+      "notes": "SOME/IP service discovery term."
+    },
+    {
+      "term": "service discovery",
+      "weight": 0.3,
+      "notes": "Broad term; only weak without SOME/IP/vehicle context."
+    },
+    {
+      "term": "doip diagnostics",
+      "weight": 1.0,
+      "notes": "Diagnostics over IP phrase."
+    },
+    {
+      "term": "uds over ip",
+      "weight": 1.0,
+      "notes": "Vehicle diagnostic transport phrase."
+    },
+    {
+      "term": "can fd",
+      "weight": 1.0,
+      "notes": "Vehicle CAN network variant."
+    },
+    {
+      "term": "can xl",
+      "weight": 1.0,
+      "notes": "Vehicle CAN network variant."
+    },
+    {
+      "term": "iso-tp",
+      "weight": 1.0,
+      "notes": "ISO 15765 transport protocol over CAN."
+    },
+    {
+      "term": "iso 15765",
+      "weight": 1.0,
+      "notes": "Diagnostics over CAN term."
+    },
+    {
+      "term": "iso 14229",
+      "weight": 1.0,
+      "notes": "UDS standard term."
+    },
+    {
+      "term": "iso 13400",
+      "weight": 1.0,
+      "notes": "DoIP standard term."
+    },
+    {
+      "term": "j1939",
+      "weight": 1.0,
+      "notes": "Heavy-duty vehicle network term; source: https://www.sae.org/standards/j1939_202306-serial-control-communications-heavy-duty-vehicle-network-top-level-document"
+    },
+    {
+      "term": "j1708",
+      "weight": 1.0,
+      "notes": "Heavy-duty vehicle network term."
+    },
+    {
+      "term": "j1587",
+      "weight": 1.0,
+      "notes": "Heavy-duty vehicle diagnostic/network term."
+    },
+    {
+      "term": "j2534",
+      "weight": 1.0,
+      "notes": "Vehicle pass-through programming API term."
+    },
+    {
+      "term": "xcp over can",
+      "weight": 1.0,
+      "notes": "Automotive calibration protocol phrase."
+    },
+    {
+      "term": "xcp over ethernet",
+      "weight": 1.0,
+      "notes": "Automotive calibration protocol phrase."
+    },
+    {
+      "term": "ccp over can",
+      "weight": 1.0,
+      "notes": "Automotive calibration protocol phrase."
+    },
+    {
+      "term": "secure onboard communication",
+      "weight": 1.0,
+      "notes": "AUTOSAR SecOC security term."
+    },
+    {
+      "term": "secoc",
+      "weight": 1.0,
+      "notes": "AUTOSAR Secure Onboard Communication term."
+    },
+    {
+      "term": "autosar adaptive",
+      "weight": 1.0,
+      "notes": "AUTOSAR platform term; source: https://www.autosar.org/"
+    },
+    {
+      "term": "autosar classic",
+      "weight": 1.0,
+      "notes": "AUTOSAR platform term; source: https://www.autosar.org/"
+    },
+    {
+      "term": "ara::com",
+      "weight": 1.0,
+      "notes": "AUTOSAR Adaptive communication API term."
+    },
+    {
+      "term": "basic software",
+      "weight": 0.3,
+      "notes": "AUTOSAR BSW term but broad phrase."
+    },
+    {
+      "term": "runtime environment",
+      "weight": 0.3,
+      "notes": "AUTOSAR RTE term but broad phrase."
+    },
+    {
+      "term": "vehicle identification number",
+      "weight": 1.0,
+      "notes": "Full form of VIN."
+    },
+    {
+      "term": "diagnostic trouble code",
+      "weight": 1.0,
+      "notes": "Vehicle diagnostics term."
+    },
+    {
+      "term": "dtc",
+      "weight": 0.5,
+      "notes": "Vehicle diagnostic acronym; corroborate."
+    },
+    {
+      "term": "data identifier",
+      "weight": 0.3,
+      "notes": "UDS DID full form but broad; use weakly."
+    },
+    {
+      "term": "diagnostic identifier",
+      "weight": 0.5,
+      "notes": "Vehicle diagnostics phrase; corroborate."
+    },
+    {
+      "term": "security access",
+      "weight": 0.5,
+      "notes": "UDS service term but broad phrase."
+    },
+    {
+      "term": "seed key",
+      "weight": 1.0,
+      "notes": "Vehicle diagnostic security-access phrase."
+    },
+    {
+      "term": "seed-key",
+      "weight": 1.0,
+      "notes": "Vehicle diagnostic security-access phrase."
+    },
+    {
+      "term": "seed and key",
+      "weight": 1.0,
+      "notes": "Vehicle diagnostic security-access phrase."
+    },
+    {
+      "term": "routine control",
+      "weight": 0.5,
+      "notes": "UDS service phrase; corroborate with diagnostics."
+    },
+    {
+      "term": "ecu reset",
+      "weight": 1.0,
+      "notes": "UDS/ECU diagnostic phrase."
+    },
+    {
+      "term": "ecu reprogramming",
+      "weight": 1.0,
+      "notes": "Vehicle ECU flashing phrase."
+    },
+    {
+      "term": "ecu flashing",
+      "weight": 1.0,
+      "notes": "Vehicle ECU flashing phrase."
+    },
+    {
+      "term": "reflashing",
+      "weight": 0.5,
+      "notes": "Vehicle programming context helpful."
+    },
+    {
+      "term": "firmware update over the air",
+      "weight": 1.0,
+      "notes": "Vehicle OTA phrase."
+    },
+    {
+      "term": "software over-the-air",
+      "weight": 1.0,
+      "notes": "Vehicle OTA phrase."
+    },
+    {
+      "term": "sota",
+      "weight": 0.5,
+      "notes": "Software OTA acronym; corroborate."
+    },
+    {
+      "term": "fota",
+      "weight": 0.5,
+      "notes": "Firmware OTA acronym; corroborate."
+    },
+    {
+      "term": "remote diagnostics",
+      "weight": 0.5,
+      "notes": "Vehicle-relevant but also used elsewhere."
+    },
+    {
+      "term": "calibration data",
+      "weight": 0.5,
+      "notes": "Automotive calibration context needed."
+    },
+    {
+      "term": "end-of-line",
+      "weight": 0.5,
+      "notes": "Manufacturing/EOL term; automotive if ECU context."
+    },
+    {
+      "term": "eol programming",
+      "weight": 1.0,
+      "notes": "Vehicle/ECU production programming phrase."
+    },
+    {
+      "term": "production data",
+      "weight": 0.3,
+      "notes": "Broad term; weak unless ECU/EOL context."
+    },
+    {
+      "term": "odx",
+      "weight": 0.5,
+      "notes": "Vehicle diagnostics data format; acronym needs context."
+    },
+    {
+      "term": "a2l",
+      "weight": 0.5,
+      "notes": "Automotive calibration data format; acronym needs context."
+    },
+    {
+      "term": "dbc file",
+      "weight": 1.0,
+      "notes": "CAN database file phrase."
+    },
+    {
+      "term": "arxml",
+      "weight": 1.0,
+      "notes": "AUTOSAR XML artifact term."
+    },
+    {
+      "term": "connected services",
+      "weight": 0.5,
+      "notes": "Connected-vehicle relevance if vehicle context exists."
+    },
+    {
+      "term": "remote start",
+      "weight": 0.5,
+      "notes": "Vehicle feature but could be broad."
+    },
+    {
+      "term": "remote unlock",
+      "weight": 0.5,
+      "notes": "Vehicle feature but could be broad."
+    },
+    {
+      "term": "passive entry",
+      "weight": 0.5,
+      "notes": "Vehicle keyless access phrase."
+    },
+    {
+      "term": "passive entry passive start",
+      "weight": 1.0,
+      "notes": "Vehicle keyless access system phrase."
+    },
+    {
+      "term": "peps",
+      "weight": 0.5,
+      "notes": "Passive Entry Passive Start acronym; corroborate."
+    },
+    {
+      "term": "tire pressure",
+      "weight": 0.5,
+      "notes": "Vehicle TPMS context; not always cybersecurity."
+    },
+    {
+      "term": "vehicle telemetry",
+      "weight": 1.0,
+      "notes": "Connected vehicle data term."
+    }
+  ]
+}
