@@ -170,7 +170,7 @@ autovia/
 - **10-Domain ECU Taxonomy** — Braking, Steering, Powertrain, Chassis, ADAS, Gateway, Telematics, Infotainment, Body, Diagnostics
 - **Priority Tiers** — P0 Critical → P3 Low with treatment SLAs
 - **AVR Schema v3.0** — Six field groups (A–F) per specification
-- **TARA Export** — ISO/SAE 21434 Cl.9 asset register entries
+- **TARA Export** — ISO/SAE 21434 Cl.15 asset-identification work product
 - **KEV Override** — CISA KEV listing forces P0_critical
 - **Justification Trace** — Full audit trail for every ARS computation
 
@@ -187,6 +187,9 @@ autovia/
 | NHTSA Guidance | ASIL-weighted safety scoring |
 
 ---
+## License
+
+Released under the MIT License. See [LICENSE](LICENSE).
 
 **Designed & Architected by Siranjeevi Srinivasa Raghavan**
 Automotive Cybersecurity Systems Engineer — Auto-VIA Framework
